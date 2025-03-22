@@ -74,13 +74,73 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-class MapScreen extends StatelessWidget {
+class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
   @override
+  State<MapScreen> createState() => _MapScreenState();
+}
+
+class _MapScreenState extends State<MapScreen> {
+  final TransformationController _transformationController =
+      TransformationController();
+
+  // Assume your PNG is 1000x800, use actual width:height ratio
+  final double _imageAspectRatio = 1000 / 800;
+
+  @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Map Screen'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Map'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          transformationController: _transformationController,
+          boundaryMargin: const EdgeInsets.all(100.0),
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 150),
+              AspectRatio(
+                aspectRatio: _imageAspectRatio,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth;
+                    final height = constraints.maxHeight;
+
+                    return Stack(
+                      children: [
+                        SizedBox(
+                          width: width,
+                          height: height,
+                          child: Image.asset(
+                            'assets/images/pftmap.png',
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Positioned(
+                          left: width * 0.3,
+                          top: height * 0.4,
+                          child: const Icon(
+                            Icons.location_on,
+                            color: Colors.red,
+                            size: 32,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 150),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
