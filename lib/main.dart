@@ -10,9 +10,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Scavenger Hunt',
+      title: 'PFT Scavenger Hunt',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        fontFamily: 'ProximaNova',
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),
       home: const MainScreen(),
@@ -85,14 +86,18 @@ class _MapScreenState extends State<MapScreen> {
   final TransformationController _transformationController =
       TransformationController();
 
-  // Assume your PNG is 1000x800, use actual width:height ratio
-  final double _imageAspectRatio = 1000 / 800;
+  final double _imageAspectRatio = 1329 / 1045;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map'),
+        title: const Text(
+          'Map',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
