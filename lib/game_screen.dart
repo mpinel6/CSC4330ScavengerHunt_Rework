@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-class GamesScreen extends StatefulWidget {
+class GamesScreen extends StatelessWidget {
   const GamesScreen({Key? key}) : super(key: key);
 
   @override
-  _GameScreenState createState() => _GameScreenState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Games')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MazeGame()),
+            );
+          },
+          child: const Text('Play Maze Game'),
+        ),
+      ),
+    );
+  }
 }
 
-class _GameScreenState extends State<GamesScreen> {
+// The Maze Game screen itself
+class MazeGame extends StatefulWidget {
+  const MazeGame({Key? key}) : super(key: key);
+
+  @override
+  _MazeGameState createState() => _MazeGameState();
+}
+
+class _MazeGameState extends State<MazeGame> {
   final List<List<int>> _maze = [
     [1, 1, 1, 1, 1],
     [1, 0, 0, 0, 1],
@@ -16,6 +39,7 @@ class _GameScreenState extends State<GamesScreen> {
     [1, 0, 0, 0, 1],
     [1, 1, 1, 1, 1],
   ];
+
   int _playerRow = 1;
   int _playerCol = 1;
   final int _exitRow = 3;
