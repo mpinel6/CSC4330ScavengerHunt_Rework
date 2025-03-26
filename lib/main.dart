@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'game_screen.dart'; // Import the separate game screen file
+import 'game_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _screens = [
     MapScreen(),
     LocationsScreen(),
-    // Moved the code for the GamesScreen to a separate file.
     GamesScreen(),
     HelpScreen(),
   ];
@@ -604,8 +603,6 @@ class _LocationsScreenState extends State<LocationsScreen> {
     );
   }
 }
-
-// The GamesScreen code was moved to game_screen.dart
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
