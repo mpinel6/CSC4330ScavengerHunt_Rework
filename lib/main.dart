@@ -165,7 +165,7 @@ class _MapScreenState extends State<MapScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 175),
+                  const SizedBox(height: 150),
                   AspectRatio(
                     aspectRatio: _imageAspectRatio,
                     child: LayoutBuilder(
@@ -184,12 +184,19 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                             ),
                             Positioned(
-                              left: width * 0.3,
-                              top: height * 0.4,
+                              left: width * 0.75,
+                              top: height * 0.325,
                               child: const Icon(
                                 Icons.location_on,
                                 color: Colors.red,
-                                size: 32,
+                                size: 26,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(1.0, 1.0),
+                                    blurRadius: 2.0,
+                                    color: Color(0xFF000000),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -197,7 +204,7 @@ class _MapScreenState extends State<MapScreen> {
                       },
                     ),
                   ),
-                  const SizedBox(height: 175),
+                  const SizedBox(height: 150),
                 ],
               ),
             ),
@@ -519,7 +526,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
         ),
         Card(
           elevation: 2,
-          color: const Color(0xFFF5F3F7),
+          color: const Color.fromARGB(255, 233, 225, 240),
           child: Column(
             children: halls,
           ),
