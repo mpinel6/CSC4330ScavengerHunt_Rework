@@ -23,7 +23,6 @@ class GamesScreen extends StatelessWidget {
   }
 }
 
-// The Maze Game screen itself
 class MazeGame extends StatefulWidget {
   const MazeGame({Key? key}) : super(key: key);
 
@@ -44,21 +43,32 @@ class _MazeGameState extends State<MazeGame> {
   int _playerCol = 1;
   final int _exitRow = 3;
   final int _exitCol = 3;
+
   bool _hasReachedExit = false;
 
-  Timer? _timer;
   int _timeElapsed = 0;
+  int _memorizeCountdown = 5;
+  bool _showMaze = true;
+  bool _isMemorizing = true;
+
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _startMasterTimer();
   }
-
-  void _startTimer() {
+  void _startMasterTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeElapsed++;
+        if (_memorizeCountdown > 0) {
+          _memorizeCountdown--;
+          if (_memorizeCountdown == 0) {
+            _isMemorizing = false;
+            _showMaze = false;
+          }
+        }
       });
     });
   }
@@ -70,24 +80,42 @@ class _MazeGameState extends State<MazeGame> {
   }
 
   void _movePlayer(int deltaRow, int deltaCol) {
+    if (_isMemorizing) return;
+
     final newRow = _playerRow + deltaRow;
     final newCol = _playerCol + deltaCol;
-    if (newRow >= 0 &&
-        newRow < _maze.length &&
-        newCol >= 0 &&
-        newCol < _maze[0].length &&
-        _maze[newRow][newCol] == 0) {
-      setState(() {
-        _playerRow = newRow;
-        _playerCol = newCol;
-      });
-      if (_playerRow == _exitRow && _playerCol == _exitCol) {
-        setState(() {
-          _hasReachedExit = true;
-        });
-        _showClueDialog();
-      }
+
+    if (newRow < 0 ||
+        newRow >= _maze.length ||
+        newCol < 0 ||
+        newCol >= _maze[0].length ||
+        _maze[newRow][newCol] == 1) {
+      _resetGame();
+      return;
     }
+
+    setState(() {
+      _playerRow = newRow;
+      _playerCol = newCol;
+    });
+
+    if (_playerRow == _exitRow && _playerCol == _exitCol) {
+      setState(() {
+        _hasReachedExit = true;
+      });
+      _showClueDialog();
+    }
+  }
+
+  void _resetGame() {
+    setState(() {
+      _playerRow = 1;
+      _playerCol = 1;
+      _hasReachedExit = false;
+      _memorizeCountdown = 5;
+      _showMaze = true;
+      _isMemorizing = true;
+    });
   }
 
   void _showClueDialog() {
@@ -96,11 +124,11 @@ class _MazeGameState extends State<MazeGame> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Clue Unlocked!'),
-          content: const Text('CLUE HERE'),
+          content: const Text('You reached the goal!'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); 
               },
               child: const Text('OK'),
             ),
@@ -114,13 +142,15 @@ class _MazeGameState extends State<MazeGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Maze Game'),
+        title: Text('Maze Game'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Text(
-                'Time: $_timeElapsed s',
+                _isMemorizing
+                    ? 'Memorize: $_memorizeCountdown s'
+                    : 'Time: $_timeElapsed s',
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -129,9 +159,7 @@ class _MazeGameState extends State<MazeGame> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: _buildMazeGrid(),
-          ),
+          Expanded(child: _buildMazeGrid()),
           _buildControlPanel(),
         ],
       ),
@@ -139,17 +167,21 @@ class _MazeGameState extends State<MazeGame> {
   }
 
   Widget _buildMazeGrid() {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: _maze.length,
-      ),
-      itemCount: _maze.length * _maze[0].length,
-      itemBuilder: (context, index) {
-        final row = index ~/ _maze.length;
-        final col = index % _maze.length;
-        return _buildMazeCell(row, col);
-      },
-    );
+    if (_showMaze) {
+      return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: _maze.length,
+        ),
+        itemCount: _maze.length * _maze[0].length,
+        itemBuilder: (context, index) {
+          final row = index ~/ _maze.length;
+          final col = index % _maze.length;
+          return _buildMazeCell(row, col);
+        },
+      );
+    } else {
+      return Container(color: Colors.black);
+    }
   }
 
   Widget _buildMazeCell(int row, int col) {
