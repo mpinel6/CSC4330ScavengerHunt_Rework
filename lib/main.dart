@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
 import 'locations_screen.dart';
 import 'help_screen.dart';
 import 'game_screen.dart';
+import 'tutorial_dialog.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -34,6 +37,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _hasSeenTutorial = false;
 
   static const List<Widget> _screens = [
     MapScreen(),
@@ -41,6 +45,29 @@ class _MainScreenState extends State<MainScreen> {
     GamesScreen(),
     HelpScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFirstLaunch();
+  }
+
+  Future<void> _checkFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    _hasSeenTutorial = prefs.getBool('hasSeenTutorial') ?? false;
+
+    if (!_hasSeenTutorial) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const TutorialDialog(),
+        ).then((_) async {
+          await prefs.setBool('hasSeenTutorial', true);
+        });
+      }
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -59,9 +86,9 @@ class _MainScreenState extends State<MainScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFF5A2B8C), // Lighter purple for top
-              Color(0xFF461D7C), // Main purple for middle
-              Color(0xFF3A1B6C), // Darker purple for bottom
+              Color(0xFF5A2B8C),
+              Color(0xFF461D7C),
+              Color(0xFF3A1B6C),
             ],
           ),
         ),

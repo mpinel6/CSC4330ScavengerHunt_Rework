@@ -58,6 +58,7 @@ class _MazeGameState extends State<MazeGame> {
     super.initState();
     _startMasterTimer();
   }
+
   void _startMasterTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -128,7 +129,7 @@ class _MazeGameState extends State<MazeGame> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),
