@@ -332,9 +332,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
     LocationInfo(
       floor: 'First Floor',
       hall: '1100s Hall',
-      title: 'Reception Area (1101)',
-      subtitle: 'Main entrance and information desk',
-      description: 'Located at the front of the building, near the main doors.',
+      title: 'Auditorium (1101)',
+      subtitle: 'Blank',
+      description: 'Blank',
     ),
     LocationInfo(
       floor: 'First Floor',
