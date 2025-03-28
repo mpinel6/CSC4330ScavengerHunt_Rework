@@ -337,17 +337,16 @@ class _MapScreenState extends State<MapScreen> {
 
   Widget _buildArticlePopup() {
     return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 1.0, end: _isClosing ? 0.0 : 1.0),
-      duration: const Duration(milliseconds: 300),
+      tween: Tween(begin: 0.0, end: _isClosing ? 0.0 : 1.0),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOutCubic,
       builder: (context, value, child) {
         return Transform.translate(
-          offset: Offset(0, 300 * (1 - value)),
+          offset: Offset(0, MediaQuery.of(context).size.height * (1 - value)),
           child: child,
         );
       },
       child: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
@@ -359,213 +358,218 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ],
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF5A2B8C),
-                      Color(0xFF461D7C),
-                      Color(0xFF3A1B6C),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _selectedIcon?.title ?? '',
-                        style: const TextStyle(
-                          color: Color(0xFFFDD023),
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(1.0, 1.0),
-                              blurRadius: 3.0,
-                              color: Color(0xFF000000),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Color(0xFFFDD023)),
-                      onPressed: _closeArticle,
-                    ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFF5A2B8C),
+                    Color(0xFF461D7C),
+                    Color(0xFF3A1B6C),
                   ],
                 ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-              if (_selectedIcon?.imagePath != null)
-                Container(
-                  height: 200,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(_selectedIcon!.imagePath!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _selectedIcon?.description ?? '',
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _selectedIcon?.title ?? '',
                       style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF333333),
+                        color: Color(0xFFFDD023),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 3.0,
+                            color: Color(0xFF000000),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _answerController,
-                            decoration: InputDecoration(
-                              hintText: 'Enter your answer...',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    const BorderSide(color: Color(0xFF333333)),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    const BorderSide(color: Color(0xFF333333)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Color(0xFF461D7C), width: 2),
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFFF5F5F5),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 12),
-                            ),
-                            onSubmitted: (_) => _checkAnswer(),
-                          ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: Color(0xFFFDD023)),
+                    onPressed: _closeArticle,
+                  ),
+                ],
+              ),
+            ),
+            if (_selectedIcon?.imagePath != null)
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(_selectedIcon!.imagePath!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _selectedIcon?.description ?? '',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Color(0xFF333333),
                         ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          padding: const EdgeInsets.all(8),
-                          constraints: const BoxConstraints(),
-                          icon: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Icon(Icons.lightbulb_outline,
-                                  color: _hintsUsed > 0
-                                      ? const Color(0xFF461D7C)
-                                      : Colors.grey),
-                              if (_hintsUsed > 0)
-                                Positioned(
-                                  right: -8,
-                                  top: -8,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFF461D7C),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 18,
-                                      minHeight: 18,
-                                    ),
-                                    child: Text(
-                                      _hintsUsed.toString(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _answerController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter your answer...',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF333333)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF333333)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                      color: Color(0xFF461D7C), width: 2),
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFF5F5F5),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                              ),
+                              onSubmitted: (_) => _checkAnswer(),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            padding: const EdgeInsets.all(8),
+                            constraints: const BoxConstraints(),
+                            icon: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Icon(Icons.lightbulb_outline,
+                                    color: _hintsUsed > 0
+                                        ? const Color(0xFF461D7C)
+                                        : Colors.grey),
+                                if (_hintsUsed > 0)
+                                  Positioned(
+                                    right: -8,
+                                    top: -8,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF461D7C),
+                                        shape: BoxShape.circle,
                                       ),
-                                      textAlign: TextAlign.center,
+                                      constraints: const BoxConstraints(
+                                        minWidth: 18,
+                                        minHeight: 18,
+                                      ),
+                                      child: Text(
+                                        _hintsUsed.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
-                          onPressed: _hintsUsed > 0
-                              ? () {
-                                  setState(() {
-                                    _hintsUsed--;
-                                  });
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Hint'),
-                                      content: Text(
-                                        _selectedIcon?.hint ??
-                                            'Look carefully at the description for clues about the answer.',
-                                        style: const TextStyle(
-                                            color: Color(0xFF333333)),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('Close'),
+                              ],
+                            ),
+                            onPressed: _hintsUsed > 0
+                                ? () {
+                                    setState(() {
+                                      _hintsUsed--;
+                                    });
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Hint'),
+                                        content: Text(
+                                          _selectedIcon?.hint ??
+                                              'Look carefully at the description for clues about the answer.',
+                                          style: const TextStyle(
+                                              color: Color(0xFF333333)),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              : () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('No Hints Available'),
-                                      content: const Text(
-                                        'You need to win games in the Games section to earn hints!',
-                                        style:
-                                            TextStyle(color: Color(0xFF333333)),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
                                       ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('Close'),
+                                    );
+                                  }
+                                : () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('No Hints Available'),
+                                        content: const Text(
+                                          'You need to win games in the Games section to earn hints!',
+                                          style: TextStyle(
+                                              color: Color(0xFF333333)),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _checkAnswer,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF461D7C),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
                           ),
-                        ),
-                        child: Text(
-                          _isCorrect ? 'Correct!' : 'Submit Answer',
-                          style: const TextStyle(fontSize: 16),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _checkAnswer,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF461D7C),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              _isCorrect ? 'Correct!' : 'Submit Answer',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
