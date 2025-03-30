@@ -58,8 +58,7 @@ class GamesScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF461D7C),
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -83,8 +82,7 @@ class GamesScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF461D7C),
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -112,7 +110,7 @@ class MazeGame extends StatefulWidget {
 class _MazeGameState extends State<MazeGame> {
   static int _gamesCompleted = 0;
 
-   static final List<List<List<int>>> _allMazes = [
+  static final List<List<List<int>>> _allMazes = [
     // Maze 1 (5x5 - easiest)
     [
       [1, 1, 1, 1, 1],
@@ -500,16 +498,13 @@ class _MazeGameState extends State<MazeGame> {
   late List<List<int>> _maze;
   int _playerRow = 1;
   int _playerCol = 1;
-
   late int _exitRow;
   late int _exitCol;
-
   bool _hasReachedExit = false;
   int _timeElapsed = 0;
   int _memorizeCountdown = 5;
   bool _showMaze = true;
   bool _isMemorizing = true;
-
   Timer? _timer;
 
   @override
@@ -521,10 +516,6 @@ class _MazeGameState extends State<MazeGame> {
 
     _exitRow = _maze.length - 2;
     _exitCol = _maze[0].length - 2;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showMazeTutorialDialog();
-    });
   }
 
   void startMemorizationTimer() {
@@ -636,21 +627,6 @@ class _MazeGameState extends State<MazeGame> {
     });
   }
 
-  void _showMazeTutorialDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return MazeTutorialDialog(
-          onTutorialComplete: () {
-            Navigator.of(context).pop();
-            startMemorizationTimer();
-          },
-        );
-      },
-    );
-  }
-
   void _showClueDialog() {
     showDialog(
       context: context,
@@ -672,7 +648,7 @@ class _MazeGameState extends State<MazeGame> {
       },
     ).then((_) {
       _gamesCompleted = (_gamesCompleted + 1).clamp(0, _allMazes.length - 1);
-      Navigator.pop(context, true); 
+      Navigator.pop(context, true);
     });
   }
 
@@ -783,8 +759,11 @@ class _MazeGameState extends State<MazeGame> {
             children: [
               ElevatedButton(
                 onPressed: () => _movePlayer(-1, 0),
-                child: const Icon(Icons.arrow_upward),
                 style: _controlButtonStyle(),
+                child: const Icon(
+                  Icons.arrow_upward,
+                  color: Colors.black, 
+                ),
               ),
             ],
           ),
@@ -793,14 +772,20 @@ class _MazeGameState extends State<MazeGame> {
             children: [
               ElevatedButton(
                 onPressed: () => _movePlayer(0, -1),
-                child: const Icon(Icons.arrow_left),
                 style: _controlButtonStyle(),
+                child: const Icon(
+                  Icons.arrow_left,
+                  color: Colors.black, 
+                ),
               ),
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () => _movePlayer(0, 1),
-                child: const Icon(Icons.arrow_right),
                 style: _controlButtonStyle(),
+                child: const Icon(
+                  Icons.arrow_right,
+                  color: Colors.black, 
+                ),
               ),
             ],
           ),
@@ -809,8 +794,11 @@ class _MazeGameState extends State<MazeGame> {
             children: [
               ElevatedButton(
                 onPressed: () => _movePlayer(1, 0),
-                child: const Icon(Icons.arrow_downward),
                 style: _controlButtonStyle(),
+                child: const Icon(
+                  Icons.arrow_downward,
+                  color: Colors.black, 
+                ),
               ),
             ],
           ),
@@ -822,7 +810,6 @@ class _MazeGameState extends State<MazeGame> {
   ButtonStyle _controlButtonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFF461D7C),
-      foregroundColor: Colors.white,
       padding: const EdgeInsets.all(12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -936,7 +923,6 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF461D7C),
-                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
