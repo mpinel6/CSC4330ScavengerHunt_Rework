@@ -66,6 +66,15 @@ flutter:
     - assets/images/pftsecondfloormap.png
     - assets/images/pftthirdfloormap.png
     - assets/images/capstonegallery.png
+    - assets/images/cambreatrium.png
+    - assets/images/dowchemical.png
+    - assets/images/commons.png
+    - assets/images/basflab.png
+    - assets/images/mechlabs.png
+    - assets/images/civillabs.png
+    - assets/images/chevcenter.png
+    - assets/images/robotlab.png
+    - assets/images/bimlab.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
