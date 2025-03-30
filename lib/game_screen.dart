@@ -9,15 +9,48 @@ class GamesScreen extends StatelessWidget {
     final List<String> locations = List.generate(10, (index) => 'Location ${index + 1}');
 
     return Scaffold(
+      backgroundColor: const Color(0xFFA39AAC),
       appBar: AppBar(
-        title: const Text('Games'),
+        title: const Text(
+          'Games',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFFDD023), 
+            shadows: [
+              Shadow(
+                offset: Offset(1.0, 1.0),
+                blurRadius: 3.0,
+                color: Color(0xFF000000),
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF5A2B8C), // Lighter purple
+                Color(0xFF461D7C), // Main purple
+                Color(0xFF3A1B6C), // Darker purple
+              ],
+            ),
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: locations.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(locations[index]),
-            trailing: const Icon(Icons.arrow_forward_ios),
+            title: Text(
+              locations[index],
+              style: const TextStyle(
+                color: Color(0xFF333333),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF333333)),
             onTap: () {
               Navigator.push(
                 context,
@@ -34,7 +67,7 @@ class GamesScreen extends StatelessWidget {
 }
 
 class MazeGame extends StatefulWidget {
-  final int locationIndex; 
+  final int locationIndex;
 
   const MazeGame({Key? key, required this.locationIndex}) : super(key: key);
 
@@ -162,7 +195,6 @@ class _MazeGameState extends State<MazeGame> {
   ];
 
   late List<List<int>> _maze;
-
   int _playerRow = 1;
   int _playerCol = 1;
 
@@ -170,7 +202,6 @@ class _MazeGameState extends State<MazeGame> {
   late int _exitCol;
 
   bool _hasReachedExit = false;
-
   int _timeElapsed = 0;
   int _memorizeCountdown = 5;
   bool _showMaze = true;
@@ -181,9 +212,7 @@ class _MazeGameState extends State<MazeGame> {
   @override
   void initState() {
     super.initState();
-
     final difficultyIndex = _gamesCompleted.clamp(0, _allMazes.length - 1);
-
     _maze = _allMazes[difficultyIndex].map((row) => List<int>.from(row)).toList();
 
     _exitRow = _maze.length - 2;
@@ -221,9 +250,10 @@ class _MazeGameState extends State<MazeGame> {
     final newRow = _playerRow + deltaRow;
     final newCol = _playerCol + deltaCol;
 
-    if (
-        newRow < 0 || newRow >= _maze.length ||
-        newCol < 0 || newCol >= _maze[0].length ||
+    if (newRow < 0 ||
+        newRow >= _maze.length ||
+        newCol < 0 ||
+        newCol >= _maze[0].length ||
         _maze[newRow][newCol] == 1) {
       _resetGame();
       return;
@@ -294,8 +324,35 @@ class _MazeGameState extends State<MazeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFA39AAC),
       appBar: AppBar(
-        title: Text('Memory Maze for Location ${widget.locationIndex + 1}'),
+        title: Text(
+          'Memory Maze for Location ${widget.locationIndex + 1}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFFDD023), 
+            shadows: [
+              Shadow(
+                offset: Offset(1.0, 1.0),
+                blurRadius: 3.0,
+                color: Color(0xFF000000),
+              ),
+            ],
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF5A2B8C),
+                Color(0xFF461D7C),
+                Color(0xFF3A1B6C),
+              ],
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -304,7 +361,10 @@ class _MazeGameState extends State<MazeGame> {
                 _isMemorizing
                     ? 'Memorize: $_memorizeCountdown s'
                     : 'Time: $_timeElapsed s',
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Color(0xFFFDD023), 
+                ),
               ),
             ),
           ),
@@ -341,19 +401,22 @@ class _MazeGameState extends State<MazeGame> {
     if (row == _playerRow && col == _playerCol) {
       return Container(
         margin: const EdgeInsets.all(2),
-        color: Colors.blue,
+        color: const Color(0xFF461D7C),
       );
-    } else if (row == _exitRow && col == _exitCol) {
+    }
+    else if (row == _exitRow && col == _exitCol) {
       return Container(
         margin: const EdgeInsets.all(2),
-        color: Colors.green,
+        color: const Color(0xFFFDD023),
       );
-    } else if (_maze[row][col] == 1) {
+    }
+    else if (_maze[row][col] == 1) {
       return Container(
         margin: const EdgeInsets.all(2),
         color: Colors.black,
       );
-    } else {
+    }
+    else {
       return Container(
         margin: const EdgeInsets.all(2),
         color: Colors.white,
@@ -372,6 +435,7 @@ class _MazeGameState extends State<MazeGame> {
               ElevatedButton(
                 onPressed: () => _movePlayer(-1, 0),
                 child: const Icon(Icons.arrow_upward),
+                style: _controlButtonStyle(),
               ),
             ],
           ),
@@ -381,11 +445,13 @@ class _MazeGameState extends State<MazeGame> {
               ElevatedButton(
                 onPressed: () => _movePlayer(0, -1),
                 child: const Icon(Icons.arrow_left),
+                style: _controlButtonStyle(),
               ),
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () => _movePlayer(0, 1),
                 child: const Icon(Icons.arrow_right),
+                style: _controlButtonStyle(),
               ),
             ],
           ),
@@ -395,10 +461,22 @@ class _MazeGameState extends State<MazeGame> {
               ElevatedButton(
                 onPressed: () => _movePlayer(1, 0),
                 child: const Icon(Icons.arrow_downward),
+                style: _controlButtonStyle(),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  ButtonStyle _controlButtonStyle() {
+    return ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF461D7C),
+      foregroundColor: Colors.white,
+      padding: const EdgeInsets.all(12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
     );
   }
@@ -420,17 +498,18 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
   final List<TutorialPage> _pages = [
     TutorialPage(
       title: 'Welcome to the Maze Memory Game!',
-      description: 'You have 5 seconds to memorize the maze. Once it disappears, use arrow buttons to navigate.',
+      description:
+          'You have 5 seconds to memorize the maze. Once it disappears, use the arrow buttons to move the purple square.',
       icon: Icons.games,
     ),
     TutorialPage(
       title: 'Memorize the Path',
-      description: 'If you hit a wall or go out of bounds, you must start over and get another 5 seconds.',
+      description: 'If you hit a wall or go out of bounds, you must start over and try to remember the maze again.',
       icon: Icons.timer,
     ),
     TutorialPage(
       title: 'Objective',
-      description: 'Reach the green square without a wrong move. Then you\'ll see your clue!',
+      description: 'Reach the yellow square without a wrong move. Then you\'ll get your clue!',
       icon: Icons.lightbulb,
     ),
   ];
@@ -441,7 +520,7 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.85,
-        height: 400, 
+        height: 450,
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -470,7 +549,7 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: _currentPage == index
-                        ? Colors.deepPurple
+                        ? const Color(0xFF461D7C) 
                         : Colors.grey.withOpacity(0.3),
                   ),
                 ),
@@ -504,10 +583,9 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFF461D7C), 
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -530,16 +608,16 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
       children: [
         Icon(
           page.icon,
-          size: 60, 
-          color: Colors.deepPurple,
+          size: 60,
+          color: const Color(0xFF461D7C),
         ),
         const SizedBox(height: 24),
         Text(
           page.title,
           style: const TextStyle(
-            fontSize: 22, 
+            fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
+            color: Color(0xFF461D7C), 
           ),
           textAlign: TextAlign.center,
         ),
