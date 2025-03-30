@@ -6,58 +6,189 @@ class GamesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> locations = List.generate(10, (index) => 'Location ${index + 1}');
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Games')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MazeGame()),
-            );
-          },
-          child: const Text('Play Maze Game'),
-        ),
+      appBar: AppBar(
+        title: const Text('Games'),
+      ),
+      body: ListView.builder(
+        itemCount: locations.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(locations[index]),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MazeGame(locationIndex: index),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
 }
 
 class MazeGame extends StatefulWidget {
-  const MazeGame({Key? key}) : super(key: key);
+  final int locationIndex; 
+
+  const MazeGame({Key? key, required this.locationIndex}) : super(key: key);
 
   @override
   _MazeGameState createState() => _MazeGameState();
 }
 
 class _MazeGameState extends State<MazeGame> {
-  final List<List<int>> _maze = [
-    [1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1],
+  static int _gamesCompleted = 0;
+
+  static final List<List<List<int>>> _allMazes = [
+    // Maze 1 (easiest)
+    [
+      [1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1],
+      [1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1],
+    ],
+    // Maze 2
+    [
+      [1, 1, 1, 1, 1],
+      [1, 0, 0, 1, 1],
+      [1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1],
+    ],
+    // Maze 3
+    [
+      [1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 1, 1],
+      [1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 4
+    [
+      [1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1],
+      [1, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 5
+    [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1, 0, 1],
+      [1, 1, 1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 1, 1, 1],
+      [1, 0, 1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 1, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 6
+    [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 1, 0, 0, 1, 1],
+      [1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1, 0, 1],
+      [1, 1, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 7
+    [
+      [1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1, 1],
+      [1, 0, 1, 1, 1, 0, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 1],
+      [1, 0, 1, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 8
+    [
+      [1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 1, 1, 1, 0, 1, 0, 1],
+      [1, 0, 0, 1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 1, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 9
+    [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1, 0, 0, 0, 1],
+      [1, 1, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ],
+    // Maze 10 (hardest)
+    [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 1, 1, 0, 1, 0, 1, 1],
+      [1, 0, 0, 0, 0, 0, 0, 1, 1],
+      [1, 1, 1, 1, 1, 1, 0, 1, 1],
+      [1, 0, 0, 0, 0, 1, 0, 0, 1],
+      [1, 0, 1, 1, 0, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+    ],
   ];
+
+  final List<String> _locationHints = [
+    'Hint for Location 1',
+    'Hint for Location 2',
+    'Hint for Location 3',
+    'Hint for Location 4',
+    'Hint for Location 5',
+    'Hint for Location 6',
+    'Hint for Location 7',
+    'Hint for Location 8',
+    'Hint for Location 9',
+    'Hint for Location 10',
+  ];
+
+  late List<List<int>> _maze;
 
   int _playerRow = 1;
   int _playerCol = 1;
 
-  final int _exitRow = 3;
-  final int _exitCol = 3;
+  late int _exitRow;
+  late int _exitCol;
 
   bool _hasReachedExit = false;
 
   int _timeElapsed = 0;
-
   int _memorizeCountdown = 5;
-  bool _showMaze = true; 
-  bool _isMemorizing = true; 
+  bool _showMaze = true;
+  bool _isMemorizing = true;
 
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
+
+    final difficultyIndex = _gamesCompleted.clamp(0, _allMazes.length - 1);
+
+    _maze = _allMazes[difficultyIndex].map((row) => List<int>.from(row)).toList();
+
+    _exitRow = _maze.length - 2;
+    _exitCol = _maze[0].length - 2;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showMazeTutorialDialog();
     });
@@ -90,10 +221,9 @@ class _MazeGameState extends State<MazeGame> {
     final newRow = _playerRow + deltaRow;
     final newCol = _playerCol + deltaCol;
 
-    if (newRow < 0 ||
-        newRow >= _maze.length ||
-        newCol < 0 ||
-        newCol >= _maze[0].length ||
+    if (
+        newRow < 0 || newRow >= _maze.length ||
+        newCol < 0 || newCol >= _maze[0].length ||
         _maze[newRow][newCol] == 1) {
       _resetGame();
       return;
@@ -120,19 +250,21 @@ class _MazeGameState extends State<MazeGame> {
       _memorizeCountdown = 5;
       _showMaze = true;
       _isMemorizing = true;
-      _timeElapsed = 0; 
+      _timeElapsed = 0;
     });
   }
 
   void _showMazeTutorialDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return MazeTutorialDialog(onTutorialComplete: () {
-          Navigator.of(context).pop();
-          startMemorizationTimer();
-        });
+        return MazeTutorialDialog(
+          onTutorialComplete: () {
+            Navigator.of(context).pop();
+            startMemorizationTimer();
+          },
+        );
       },
     );
   }
@@ -143,7 +275,7 @@ class _MazeGameState extends State<MazeGame> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Clue Unlocked!'),
-          content: const Text('You reached the goal!'),
+          content: Text(_locationHints[widget.locationIndex]),
           actions: [
             TextButton(
               onPressed: () {
@@ -154,14 +286,16 @@ class _MazeGameState extends State<MazeGame> {
           ],
         );
       },
-    );
+    ).then((_) {
+      _gamesCompleted = (_gamesCompleted + 1).clamp(0, _allMazes.length - 1);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Maze Memory Game'),
+        title: Text('Memory Maze for Location ${widget.locationIndex + 1}'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -189,12 +323,12 @@ class _MazeGameState extends State<MazeGame> {
     if (_showMaze) {
       return GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: _maze.length,
+          crossAxisCount: _maze[0].length,
         ),
         itemCount: _maze.length * _maze[0].length,
         itemBuilder: (context, index) {
-          final row = index ~/ _maze.length;
-          final col = index % _maze.length;
+          final row = index ~/ _maze[0].length;
+          final col = index % _maze[0].length;
           return _buildMazeCell(row, col);
         },
       );
@@ -378,9 +512,9 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text(_currentPage < _pages.length - 1
-                      ? 'Next'
-                      : 'Got it!'),
+                  child: Text(
+                    _currentPage < _pages.length - 1 ? 'Next' : 'Got it!',
+                  ),
                 ),
               ],
             ),
