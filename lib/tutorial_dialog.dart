@@ -32,7 +32,7 @@ class _TutorialDialogState extends State<TutorialDialog> {
     TutorialPage(
       title: 'Games Library',
       description:
-          'Play a collection of games to earn hints to assist you in unlocking the next step!',
+          'Play a collection of games to earn hints to assist you in unlocking the next step in the scavenger hunt!',
       icon: Icons.games,
     ),
     TutorialPage(

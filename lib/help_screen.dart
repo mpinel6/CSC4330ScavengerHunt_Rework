@@ -42,7 +42,6 @@ class _HelpScreenState extends State<HelpScreen> {
       barrierDismissible: false,
       builder: (context) {
         return MazeTutorialDialog(
-          // We can simply pop once complete
           onTutorialComplete: () {
             Navigator.of(context).pop();
           },
