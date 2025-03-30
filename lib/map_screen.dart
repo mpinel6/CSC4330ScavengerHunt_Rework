@@ -313,6 +313,32 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  bool _isNextArticleOnSecondFloor() {
+    // Check if user has visited second floor by checking if they've answered any second floor icons
+    final hasVisitedSecondFloor = _floorIcons['Second Floor']
+            ?.any((icon) => _answeredIcons.contains(icon.title)) ??
+        false;
+
+    // If user has already visited second floor, don't show the indicator
+    if (hasVisitedSecondFloor) {
+      return false;
+    }
+
+    final floorIcons = _floorIcons[_currentFloor];
+    if (floorIcons == null || floorIcons.isEmpty) return false;
+
+    // If we're on the first floor and all icons except the last one are answered
+    if (_currentFloor == 'First Floor') {
+      final allAnsweredExceptLast = floorIcons.length > 1 &&
+          floorIcons
+              .sublist(0, floorIcons.length - 1)
+              .every((icon) => _answeredIcons.contains(icon.title));
+      return allAnsweredExceptLast;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -467,30 +493,48 @@ class _MapScreenState extends State<MapScreen> {
               builder: (context, value, child) {
                 return Transform.translate(
                   offset: Offset(0, 100 * value),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        setState(() {
-                          _showFloorButtons = !_showFloorButtons;
-                        });
-                      },
-                      backgroundColor: const Color(0xFF461D7C),
-                      child: const Icon(
-                        Icons.layers,
-                        color: Color(0xFFFDD023),
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            setState(() {
+                              _showFloorButtons = !_showFloorButtons;
+                            });
+                          },
+                          backgroundColor: const Color(0xFF461D7C),
+                          child: const Icon(
+                            Icons.layers,
+                            color: Color(0xFFFDD023),
+                          ),
+                        ),
                       ),
-                    ),
+                      if (_isNextArticleOnSecondFloor())
+                        Positioned(
+                          right: -8,
+                          top: -8,
+                          child: Container(
+                            width: 16,
+                            height: 16,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },
@@ -748,6 +792,9 @@ class _MapScreenState extends State<MapScreen> {
 
   Widget _buildFloorButton(String floor, IconData icon) {
     final isSelected = _currentFloor == floor;
+    final showIndicator =
+        floor == 'Second Floor' && _isNextArticleOnSecondFloor();
+
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(8),
@@ -760,32 +807,52 @@ class _MapScreenState extends State<MapScreen> {
           });
         },
         borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isSelected ? const Color(0xFF461D7C) : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                floor,
-                style: TextStyle(
-                  color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color:
+                      isSelected ? const Color(0xFF461D7C) : Colors.transparent,
+                  width: 2,
                 ),
               ),
-            ],
-          ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    floor,
+                    style: TextStyle(
+                      color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (showIndicator)
+              Positioned(
+                right: -8,
+                top: -8,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
