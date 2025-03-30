@@ -41,25 +41,29 @@ class _MazeGameState extends State<MazeGame> {
 
   int _playerRow = 1;
   int _playerCol = 1;
+
   final int _exitRow = 3;
   final int _exitCol = 3;
 
   bool _hasReachedExit = false;
 
   int _timeElapsed = 0;
+
   int _memorizeCountdown = 5;
-  bool _showMaze = true;
-  bool _isMemorizing = true;
+  bool _showMaze = true; 
+  bool _isMemorizing = true; 
 
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _startMasterTimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showMazeTutorialDialog();
+    });
   }
 
-  void _startMasterTimer() {
+  void startMemorizationTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _timeElapsed++;
@@ -116,7 +120,21 @@ class _MazeGameState extends State<MazeGame> {
       _memorizeCountdown = 5;
       _showMaze = true;
       _isMemorizing = true;
+      _timeElapsed = 0; 
     });
+  }
+
+  void _showMazeTutorialDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return MazeTutorialDialog(onTutorialComplete: () {
+          Navigator.of(context).pop();
+          startMemorizationTimer();
+        });
+      },
+    );
   }
 
   void _showClueDialog() {
@@ -143,7 +161,7 @@ class _MazeGameState extends State<MazeGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Maze Game'),
+        title: const Text('Maze Memory Game'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -250,4 +268,172 @@ class _MazeGameState extends State<MazeGame> {
       ),
     );
   }
+}
+
+class MazeTutorialDialog extends StatefulWidget {
+  final VoidCallback onTutorialComplete;
+
+  const MazeTutorialDialog({Key? key, required this.onTutorialComplete}) : super(key: key);
+
+  @override
+  State<MazeTutorialDialog> createState() => _MazeTutorialDialogState();
+}
+
+class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<TutorialPage> _pages = [
+    TutorialPage(
+      title: 'Welcome to the Maze Memory Game!',
+      description: 'You have 5 seconds to memorize the maze. Once it disappears, use arrow buttons to navigate.',
+      icon: Icons.games,
+    ),
+    TutorialPage(
+      title: 'Memorize the Path',
+      description: 'If you hit a wall or go out of bounds, you must start over and get another 5 seconds.',
+      icon: Icons.timer,
+    ),
+    TutorialPage(
+      title: 'Objective',
+      description: 'Reach the green square without a wrong move. Then you\'ll see your clue!',
+      icon: Icons.lightbulb,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85,
+        height: 400, 
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() => _currentPage = index);
+                },
+                itemCount: _pages.length,
+                itemBuilder: (context, index) {
+                  return _buildPage(_pages[index]);
+                },
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _pages.length,
+                (index) => Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentPage == index
+                        ? Colors.deepPurple
+                        : Colors.grey.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (_currentPage > 0)
+                  TextButton(
+                    onPressed: () {
+                      _pageController.previousPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    child: const Text('Previous'),
+                  )
+                else
+                  const SizedBox.shrink(),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_currentPage < _pages.length - 1) {
+                      _pageController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    } else {
+                      widget.onTutorialComplete();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(_currentPage < _pages.length - 1
+                      ? 'Next'
+                      : 'Got it!'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPage(TutorialPage page) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          page.icon,
+          size: 60, 
+          color: Colors.deepPurple,
+        ),
+        const SizedBox(height: 24),
+        Text(
+          page.title,
+          style: const TextStyle(
+            fontSize: 22, 
+            fontWeight: FontWeight.bold,
+            color: Colors.deepPurple,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            page.description,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color(0xFF333333),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TutorialPage {
+  final String title;
+  final String description;
+  final IconData icon;
+
+  TutorialPage({
+    required this.title,
+    required this.description,
+    required this.icon,
+  });
 }
