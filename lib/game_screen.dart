@@ -100,6 +100,7 @@ class GamesScreen extends StatelessWidget {
   }
 }
 
+/// The MazeGame widget – plays the memory game and returns true when completed successfully.
 class MazeGame extends StatefulWidget {
   const MazeGame({Key? key}) : super(key: key);
 
@@ -503,6 +504,7 @@ class _MazeGameState extends State<MazeGame> {
   bool _hasReachedExit = false;
   int _timeElapsed = 0;
   int _memorizeCountdown = 5;
+  // _showMaze controls the color of path cells: white during memorization, black afterward.
   bool _showMaze = true;
   bool _isMemorizing = true;
   Timer? _timer;
@@ -510,12 +512,38 @@ class _MazeGameState extends State<MazeGame> {
   @override
   void initState() {
     super.initState();
-
     final difficultyIndex = _gamesCompleted.clamp(0, _allMazes.length - 1);
     _maze = _allMazes[difficultyIndex].map((row) => List<int>.from(row)).toList();
-
     _exitRow = _maze.length - 2;
     _exitCol = _maze[0].length - 2;
+
+    // Show a "Ready to start?" popup before beginning the memorize timer.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showReadyPopup();
+    });
+  }
+
+  void _showReadyPopup() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Ready to start?'),
+          content: const Text(
+              'Press "Start" when you are ready to begin memorizing the maze.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                startMemorizationTimer();
+              },
+              child: const Text('Start'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void startMemorizationTimer() {
@@ -541,10 +569,8 @@ class _MazeGameState extends State<MazeGame> {
 
   void _movePlayer(int deltaRow, int deltaCol) {
     if (_isMemorizing) return;
-
     final newRow = _playerRow + deltaRow;
     final newCol = _playerCol + deltaCol;
-
     if (newRow < 0 ||
         newRow >= _maze.length ||
         newCol < 0 ||
@@ -553,12 +579,10 @@ class _MazeGameState extends State<MazeGame> {
       _showFailDialog();
       return;
     }
-
     setState(() {
       _playerRow = newRow;
       _playerCol = newCol;
     });
-
     if (_playerRow == _exitRow && _playerCol == _exitCol) {
       setState(() {
         _hasReachedExit = true;
@@ -625,6 +649,8 @@ class _MazeGameState extends State<MazeGame> {
       _isMemorizing = true;
       _timeElapsed = 0;
     });
+    // Optionally, you can show the Ready popup again here if desired.
+    _showReadyPopup();
   }
 
   void _showClueDialog() {
@@ -762,7 +788,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_upward,
-                  color: Colors.black, 
+                  color: Colors.black, // LSU Black color
                 ),
               ),
             ],
@@ -775,7 +801,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_left,
-                  color: Colors.black, 
+                  color: Colors.black, // LSU Black color
                 ),
               ),
               const SizedBox(width: 16),
@@ -784,7 +810,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_right,
-                  color: Colors.black, 
+                  color: Colors.black, // LSU Black color
                 ),
               ),
             ],
@@ -797,7 +823,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_downward,
-                  color: Colors.black, 
+                  color: Colors.black, // LSU Black color
                 ),
               ),
             ],
@@ -831,7 +857,6 @@ class MazeTutorialDialog extends StatefulWidget {
 class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-
   final List<TutorialPage> _pages = [
     TutorialPage(
       title: 'Welcome to the Maze Memory Game!',
