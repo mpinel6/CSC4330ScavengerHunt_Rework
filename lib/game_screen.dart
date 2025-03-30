@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'map_screen.dart'; 
 
 class GamesScreen extends StatelessWidget {
   const GamesScreen({Key? key}) : super(key: key);
 
+  void _showTutorial(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => MazeTutorialDialog(
+        onTutorialComplete: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<String> locations = List.generate(10, (index) => 'Location ${index + 1}');
-
     return Scaffold(
       backgroundColor: const Color(0xFFA39AAC),
       appBar: AppBar(
@@ -15,7 +26,7 @@ class GamesScreen extends StatelessWidget {
           'Games',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(0xFFFDD023), 
+            color: Color(0xFFFDD023),
             shadows: [
               Shadow(
                 offset: Offset(1.0, 1.0),
@@ -31,45 +42,68 @@ class GamesScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFF5A2B8C), // Lighter purple
-                Color(0xFF461D7C), // Main purple
-                Color(0xFF3A1B6C), // Darker purple
+                Color(0xFF5A2B8C),
+                Color(0xFF461D7C),
+                Color(0xFF3A1B6C),
               ],
             ),
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: locations.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              locations[index],
-              style: const TextStyle(
-                color: Color(0xFF333333),
-                fontWeight: FontWeight.w600,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF461D7C),
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () async {
+                final completed = await Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MazeGame()),
+                );
+                if (completed == true) {
+                  MapScreenState.availableHints++;
+                }
+              },
+              child: const Text(
+                'Play Maze Game',
+                style: TextStyle(fontSize: 18),
               ),
             ),
-            trailing: const Icon(Icons.arrow_forward_ios, color: Color(0xFF333333)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MazeGame(locationIndex: index),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF461D7C),
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              );
-            },
-          );
-        },
+              ),
+              onPressed: () => _showTutorial(context),
+              child: const Text(
+                'How to Play',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class MazeGame extends StatefulWidget {
-  final int locationIndex;
-
-  const MazeGame({Key? key, required this.locationIndex}) : super(key: key);
+  const MazeGame({Key? key}) : super(key: key);
 
   @override
   _MazeGameState createState() => _MazeGameState();
@@ -78,8 +112,8 @@ class MazeGame extends StatefulWidget {
 class _MazeGameState extends State<MazeGame> {
   static int _gamesCompleted = 0;
 
-  static final List<List<List<int>>> _allMazes = [
-    // Maze 1 (easiest)
+   static final List<List<List<int>>> _allMazes = [
+    // Maze 1 (5x5 - easiest)
     [
       [1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1],
@@ -87,15 +121,15 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 1],
       [1, 1, 1, 1, 1],
     ],
-    // Maze 2
+    // Maze 2 (5x5)
     [
       [1, 1, 1, 1, 1],
       [1, 0, 0, 1, 1],
-      [1, 1, 0, 0, 1],
-      [1, 1, 0, 0, 1],
+      [1, 0, 1, 0, 1],
+      [1, 0, 0, 0, 1],
       [1, 1, 1, 1, 1],
     ],
-    // Maze 3
+    // Maze 3 (6x6)
     [
       [1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 1],
@@ -104,7 +138,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1],
     ],
-    // Maze 4
+    // Maze 4 (6x6)
     [
       [1, 1, 1, 1, 1, 1],
       [1, 0, 0, 1, 0, 1],
@@ -113,7 +147,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1],
     ],
-    // Maze 5
+    // Maze 5 (7x7)
     [
       [1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1, 0, 1],
@@ -123,7 +157,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 6
+    // Maze 6 (7x7)
     [
       [1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 1, 0, 0, 1],
@@ -133,7 +167,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 1, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 7
+    // Maze 7 (8x8)
     [
       [1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 0, 0, 1, 1],
@@ -144,7 +178,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 0, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 8
+    // Maze 8 (8x8)
     [
       [1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 1, 0, 0, 0, 0, 1],
@@ -155,7 +189,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 0, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 9
+    // Maze 9 (9x9)
     [
       [1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -167,7 +201,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 10 (hardest)
+    // Maze 10 (9x9)
     [
       [1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -179,19 +213,288 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 1, 0, 0, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1],
     ],
-  ];
-
-  final List<String> _locationHints = [
-    'Hint for Location 1',
-    'Hint for Location 2',
-    'Hint for Location 3',
-    'Hint for Location 4',
-    'Hint for Location 5',
-    'Hint for Location 6',
-    'Hint for Location 7',
-    'Hint for Location 8',
-    'Hint for Location 9',
-    'Hint for Location 10',
+    // Maze 11 (9x9)
+    [
+      [1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,1],
+      [1,1,1,0,1,0,1,0,1],
+      [1,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1],
+      [1,1,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 12 (9x9)
+    [
+      [1,1,1,1,1,1,1,1,1],
+      [1,0,1,0,0,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1],
+      [1,1,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 13 (10x10)
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,1,0,1,0,1],
+      [1,1,1,1,0,1,0,1,0,1],
+      [1,0,0,1,0,0,0,0,0,1],
+      [1,0,0,0,0,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 14 (10x10)
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,1,0,0,1],
+      [1,0,1,1,1,0,1,0,1,1],
+      [1,0,1,0,0,0,1,0,0,1],
+      [1,0,1,0,1,1,1,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1],
+      [1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 15 (10x10)
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1],
+      [1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,0,1,0,0,1],
+      [1,0,1,1,1,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 16 (10x10)
+    [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,1,0,0,0,1],
+      [1,0,1,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,0,1,1,0,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,0,1,0,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 17 (11x11)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,0,0,1],
+      [1,0,1,1,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 18 (11x11)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,1,0,1],
+      [1,0,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 19 (11x11)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,1,1,1,0,1,0,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 20 (11x11)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,1,0,1],
+      [1,0,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 21 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,1,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 22 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,0,1,0,1],
+      [1,0,1,1,1,1,1,0,1,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 23 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,0,1,1,1,0,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1,1],
+      [1,0,1,0,1,1,1,0,1,0,0,1],
+      [1,0,0,0,1,0,0,0,1,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 24 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,0,1,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1,0,1],
+      [1,0,1,0,1,1,0,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 25 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,0,1,1,0,1],
+      [1,0,1,0,0,0,1,0,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 26 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 27 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 28 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 29 (12x12)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
+    // Maze 30 (12x12 - hardest)
+    [
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,1,0,1,0,1],
+      [1,0,1,0,1,0,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1],
+    ],
   ];
 
   late List<List<int>> _maze;
@@ -212,6 +515,7 @@ class _MazeGameState extends State<MazeGame> {
   @override
   void initState() {
     super.initState();
+
     final difficultyIndex = _gamesCompleted.clamp(0, _allMazes.length - 1);
     _maze = _allMazes[difficultyIndex].map((row) => List<int>.from(row)).toList();
 
@@ -255,7 +559,7 @@ class _MazeGameState extends State<MazeGame> {
         newCol < 0 ||
         newCol >= _maze[0].length ||
         _maze[newRow][newCol] == 1) {
-      _resetGame();
+      _showFailDialog();
       return;
     }
 
@@ -270,6 +574,54 @@ class _MazeGameState extends State<MazeGame> {
       });
       _showClueDialog();
     }
+  }
+
+  void _showFailDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFFA39AAC),
+          title: const Text(
+            'You failed!',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF461D7C),
+              shadows: [
+                Shadow(
+                  offset: Offset(1.0, 1.0),
+                  blurRadius: 3.0,
+                  color: Color(0xFF000000),
+                ),
+              ],
+            ),
+          ),
+          content: const Text(
+            'Try again!',
+            style: TextStyle(
+              fontSize: 16,
+              color: Color(0xFF333333),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _resetGame();
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  color: Color(0xFFFDD023),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _resetGame() {
@@ -304,8 +656,10 @@ class _MazeGameState extends State<MazeGame> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Clue Unlocked!'),
-          content: Text(_locationHints[widget.locationIndex]),
+          title: const Text('Game Completed!'),
+          content: const Text(
+            'You earned +1 hint.\nUse it in the Map screen!',
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -318,7 +672,7 @@ class _MazeGameState extends State<MazeGame> {
       },
     ).then((_) {
       _gamesCompleted = (_gamesCompleted + 1).clamp(0, _allMazes.length - 1);
-      Navigator.pop(context);
+      Navigator.pop(context, true); 
     });
   }
 
@@ -331,7 +685,7 @@ class _MazeGameState extends State<MazeGame> {
           'Memory Maze',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Color(0xFFFDD023), 
+            color: Color(0xFFFDD023),
             shadows: [
               Shadow(
                 offset: Offset(1.0, 1.0),
@@ -364,7 +718,7 @@ class _MazeGameState extends State<MazeGame> {
                     : 'Time: $_timeElapsed s',
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Color(0xFFFDD023), 
+                  color: Color(0xFFFDD023),
                 ),
               ),
             ),
@@ -381,21 +735,17 @@ class _MazeGameState extends State<MazeGame> {
   }
 
   Widget _buildMazeGrid() {
-    if (_showMaze) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: _maze[0].length,
-        ),
-        itemCount: _maze.length * _maze[0].length,
-        itemBuilder: (context, index) {
-          final row = index ~/ _maze[0].length;
-          final col = index % _maze[0].length;
-          return _buildMazeCell(row, col);
-        },
-      );
-    } else {
-      return Container(color: Colors.black);
-    }
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: _maze[0].length,
+      ),
+      itemCount: _maze.length * _maze[0].length,
+      itemBuilder: (context, index) {
+        final row = index ~/ _maze[0].length;
+        final col = index % _maze[0].length;
+        return _buildMazeCell(row, col);
+      },
+    );
   }
 
   Widget _buildMazeCell(int row, int col) {
@@ -405,24 +755,22 @@ class _MazeGameState extends State<MazeGame> {
         color: const Color(0xFF461D7C),
       );
     }
-    else if (row == _exitRow && col == _exitCol) {
+    if (row == _exitRow && col == _exitCol) {
       return Container(
         margin: const EdgeInsets.all(2),
         color: const Color(0xFFFDD023),
       );
     }
-    else if (_maze[row][col] == 1) {
+    if (_maze[row][col] == 1) {
       return Container(
         margin: const EdgeInsets.all(2),
         color: Colors.black,
       );
     }
-    else {
-      return Container(
-        margin: const EdgeInsets.all(2),
-        color: Colors.white,
-      );
-    }
+    return Container(
+      margin: const EdgeInsets.all(2),
+      color: _showMaze ? Colors.white : Colors.black,
+    );
   }
 
   Widget _buildControlPanel() {
@@ -486,7 +834,8 @@ class _MazeGameState extends State<MazeGame> {
 class MazeTutorialDialog extends StatefulWidget {
   final VoidCallback onTutorialComplete;
 
-  const MazeTutorialDialog({Key? key, required this.onTutorialComplete}) : super(key: key);
+  const MazeTutorialDialog({Key? key, required this.onTutorialComplete})
+      : super(key: key);
 
   @override
   State<MazeTutorialDialog> createState() => _MazeTutorialDialogState();
@@ -500,17 +849,19 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
     TutorialPage(
       title: 'Welcome to the Maze Memory Game!',
       description:
-          'You have 5 seconds to memorize the maze. Once it disappears, use the arrow buttons to move the purple square.',
+          'You have 5 seconds to memorize the maze. Once it disappears, use arrow buttons to move the purple square.',
       icon: Icons.games,
     ),
     TutorialPage(
       title: 'Memorize the Path',
-      description: 'If you hit a wall or go out of bounds, you must start over and try to remember the maze again.',
+      description:
+          'If you hit a wall or go out of bounds, you must start over and try to remember the maze again.',
       icon: Icons.timer,
     ),
     TutorialPage(
       title: 'Objective',
-      description: 'Reach the yellow square without a wrong move. Then you\'ll get your clue!',
+      description:
+          'Reach the yellow square without a wrong move. Then you\'ll get your clue!',
       icon: Icons.lightbulb,
     ),
   ];
@@ -550,7 +901,7 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: _currentPage == index
-                        ? const Color(0xFF461D7C) 
+                        ? const Color(0xFF461D7C)
                         : Colors.grey.withOpacity(0.3),
                   ),
                 ),
@@ -584,9 +935,10 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF461D7C), 
+                    backgroundColor: const Color(0xFF461D7C),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -618,7 +970,7 @@ class _MazeTutorialDialogState extends State<MazeTutorialDialog> {
           style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF461D7C), 
+            color: Color(0xFF461D7C),
           ),
           textAlign: TextAlign.center,
         ),
