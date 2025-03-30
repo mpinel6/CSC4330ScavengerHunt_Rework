@@ -46,10 +46,13 @@ class _MapScreenState extends State<MapScreen> {
             '    As you explore, keep an eye on how power flows through the building — '
             'sometimes it\'s easy to overlook what\'s right beneath your feet.',
         imagePath: 'assets/images/capstonegallery.png',
-        answer: '15',
+        answer: '14 outlets',
         newPosition: const Offset(0.5, 0.5),
-        hint:
-            'Count the number of power outlets in the room. Look for the standard wall outlets.',
+        hints: [
+          'Energy is all around, often hiding in plain sight. Some sources are closer than you think — maybe even lining your path.',
+          'Sometimes, the most useful connections are right at your feet. Consider where students might need a little extra power.',
+          'The Capstone steps offer a great place to gather, but they\'re also equipped for those needing a quick recharge. Count carefully!',
+        ],
       ),
       MapIcon(
         position: const Offset(0.75, 0.65),
@@ -65,12 +68,16 @@ class _MapScreenState extends State<MapScreen> {
             'up to 250 students. Across from the doors to the RoyOMartin Auditorium, you\'ll find '
             'the Donor Wall, which recognizes the names of donors and industry partners who, along '
             'with funds from the state of Louisiana, helped make the renovation of Patrick F. Taylor '
-            'Hall possible.',
+            'Hall possible.\n\n'
+            '    The Donor Wall is a display of appreciation, but not all names are alike.',
         imagePath: 'assets/images/cambreatrium.png',
-        answer: '*',
+        answer: '8 purple donors',
         newPosition: const Offset(0.75, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Colors often carry meaning.',
+          'Some names shine brighter than others, not just in generosity but in hue.',
+          'While yellow dominates, purple isn’t just a choice — it’s a distinction. Seek out those who stand apart.',
+        ],
       ),
       MapIcon(
         position: const Offset(0.6, 0.67),
@@ -95,12 +102,16 @@ class _MapScreenState extends State<MapScreen> {
             'would not be out of place at a commercial pharmaceutical or specialty chemical facility '
             'that operates in the commercial world. It is built to those specifications and design '
             'criteria. Students will physically interact with equipment in their junior-year lab '
-            'and then learn to run the equipment from the adjacent control room as seniors.',
+            'and then learn to run the equipment from the adjacent control room as seniors.\n\n'
+            '    Before stepping into certain areas, it\'s wise to check for any precautions. The right clue will be staring you in the face — if you\'re paying attention.',
         imagePath: 'assets/images/dowchemical.png',
-        answer: '*',
+        answer: 'Eye Protection',
         newPosition: const Offset(0.75, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Laboratories are places of discovery, but also of caution.',
+          'Warnings aren’t just words; they’re a visual reminder.',
+          'Before you cross the threshold, consider what might protect the most sensitive part of yourself.',
+        ],
       ),
       MapIcon(
         position: const Offset(0.33, 0.67),
@@ -113,12 +124,17 @@ class _MapScreenState extends State<MapScreen> {
             'products. The lab space is dedicated to research investigating sustainable solutions '
             'to meet global challenges. The current researcher-in-residence, Dr. Jimmy Lawrence, '
             'studies and develops new functional polymers and nanoscale composites for healthcare, '
-            'energy, environmental, and other industrial applications.',
+            'energy, environmental, and other industrial applications.\n\n'
+            '    This challenge is about keeping your eyes open for details that others might miss.'
+            'Don’t rush; let your surroundings speak to you.',
         imagePath: 'assets/images/basflab.png',
-        answer: '*',
+        answer: 'BASF Performance Flooring',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Not every message is loud.',
+          'Somewhere near, a quiet message waits — a simple statement that holds the answer.',
+          'A speech bubble by a door has a few words that may just point you in the right direction.',
+        ],
       ),
       MapIcon(
         position: const Offset(0.27, 0.33),
@@ -130,12 +146,16 @@ class _MapScreenState extends State<MapScreen> {
             'space for everyone in Patrick F. Taylor Hall. Students frequent this space between '
             'classes, not only because of the Panera Bread, but also because of the nearby Dow '
             'Student Leadership Incubator, which serves as a meeting and storage space for the '
-            'more than 40 student organizations that are part of our college.',
+            'more than 40 student organizations that are part of our college.\n\n'
+            '    The Commons isn’t just a place to gather; it’s where appetites meet satisfaction.',
         imagePath: 'assets/images/commons.png',
-        answer: '*',
+        answer: 'Mac and Cheese',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Look for the familiar comforts of a well-known spot, and you might just find your answer on the menu.',
+          'Creamy, cheesy, and iconic — it’s often hard to resist.',
+          'Pasta',
+        ],
       ),
       MapIcon(
         position: const Offset(0.36, 0.19),
@@ -147,12 +167,17 @@ class _MapScreenState extends State<MapScreen> {
             'spaces for mechanical and industrial engineering, including the human factors, '
             'thermal systems, materials, and instrumentation labs. Within these labs, you '
             'will find equipment like a wind tunnel, tensile strength testers, and 3D-motion '
-            'analysis systems.',
+            'analysis systems.\n\n'
+            '    In this challenge, numbers are your guide.'
+            'The key lies in understanding where these labs come together.',
         imagePath: 'assets/images/mechlabs.png',
-        answer: '*',
+        answer: '1300\'s Hall',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Mechanical and industrial engineering labs are scattered throughout, but they all share a common thread.',
+          'Every lab has a home, and for mechanical engineering, the location is no accident. Consider the common space where their work thrives.',
+          'When in doubt, follow the numbers. The right hall is waiting for you to make the connection.',
+        ],
       ),
       MapIcon(
         position: const Offset(0.68, 0.1),
@@ -163,12 +188,16 @@ class _MapScreenState extends State<MapScreen> {
             '    In this section of Patrick F. Taylor Hall, you will find most of our civil '
             'engineering student labs. Here, our students test concrete for strength and damage, '
             'test and create asphalt, test the chemical composition and strength of soils, and '
-            'study the strength of metal and timber.',
+            'study the strength of metal and timber.\n\n'
+            '    Civil engineering is all about strength and precision, and so is this task.',
         imagePath: 'assets/images/civillabs.png',
-        answer: '*',
+        answer: '10 Civil Engineering Labs',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Keep your focus sharp and count carefully — the answer is laid out right in front of you.',
+          'This challenge is about understanding the layout and the connections between labs.',
+          'Each lab has a purpose, from concrete testing to soil analysis. How many different tasks need dedicated spaces?',
+        ],
       ),
       MapIcon(
         position: const Offset(0.74, 0.3),
@@ -179,12 +208,16 @@ class _MapScreenState extends State<MapScreen> {
             '    The College of Engineering offers a minor in robotics and provides a lab '
             'space to support this program. Some of the equipment housed in this lab include '
             'a hydraulic robotic arm; robotic vehicles, such as spiders and crawlers; and a '
-            'mini humanoid robot named "Darwin."',
+            'mini humanoid robot named "Darwin."\n\n'
+            '    This challenge is all about machines and the minds behind them.',
         imagePath: 'assets/images/robotlab.png',
-        answer: '*',
+        answer: 'Bengal Bots',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'Robots like spiders, crawlers, and humanoids are their specialty. Who commands these creations?',
+          'The Robotics Lab is alive with innovation, and the ones responsible have a name that reflects their fierce spirit.',
+          'What club leads the charge in the world of robotics here?',
+        ],
       ),
       MapIcon(
         position: const Offset(0.75, 0.38),
@@ -201,12 +234,16 @@ class _MapScreenState extends State<MapScreen> {
             'class projects. Students who take the required number of communication-intensive '
             'courses and complete a senior portfolio can graduate as a Distinguished Communicator. '
             'The College of Engineering is proud to graduate the most Distinguished Communicators '
-            'each year, thanks in large part to this space and the professional staff who run it.',
+            'each year, thanks in large part to this space and the professional staff who run it.\n\n'
+            '    In the Chevron Center, innovation and creation are at your fingertips — for a price.',
         imagePath: 'assets/images/chevcenter.png',
-        answer: '*',
+        answer: '0.15 per mL for 3D printing',
         newPosition: const Offset(0.55, 0.75),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'When working with 3D printers, materials are measured carefully.',
+          'The key to this question lies in understanding just how much a small amount can cost.',
+          'The cost isn’t calculated per project or per hour. It’s all about volume.',
+        ],
       ),
     ],
     'Second Floor': [
@@ -219,18 +256,22 @@ class _MapScreenState extends State<MapScreen> {
         description:
             '    The MMR Building Information Modeling Laboratory is utilized by construction '
             'management students and was specially designed and constructed by our faculty. '
-            'The lab space consists of 44 4K displays that allow for three-dimensional and '
+            'The lab space consists of 4K displays that allow for three-dimensional and '
             'computer-generated views of building plans. This allows students and faculty to '
             'virtually visit building sites to make assessments, alter plans, and consider '
             'concerns like safety and maintenance. In addition to this unique lab space, the '
             'Bert S. Turner Department of Construction Management has several labs and classrooms '
             'on the third floor, including an estimating and scheduling lab, a room with several '
-            'CATS equipment simulators, and an advanced materials lab.',
+            'CATS equipment simulators, and an advanced materials lab.\n\n'
+            '    The BIM Lab is where construction plans come to life, viewed in stunning detail.',
         imagePath: 'assets/images/bimlab.png',
-        answer: '*',
+        answer: '44 screens',
         newPosition: const Offset(0.5, 0.5),
-        hint:
-            'What technology is mentioned first in the description that students can use for their projects?',
+        hints: [
+          'The lab’s 4K displays offer a larger-than-life view of projects.',
+          'This isn’t just one screen — it’s a full-scale experience. Think about how many it would take to simulate an entire site.',
+          'How many screens make this immersive experience possible? The answer is there — if you can count it.',
+        ],
       ),
     ],
   };
@@ -299,7 +340,7 @@ class _MapScreenState extends State<MapScreen> {
                 answer: _selectedIcon!.answer,
                 newPosition: _selectedIcon!.newPosition,
                 audioPath: _selectedIcon!.audioPath,
-                hint: _selectedIcon!.hint,
+                hints: _selectedIcon!.hints,
               );
             }
           }
@@ -718,12 +759,29 @@ class _MapScreenState extends State<MapScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: const Text('Hint'),
-                                          content: Text(
-                                            _selectedIcon?.hint ??
-                                                'Look carefully at the description for clues about the answer.',
-                                            style: const TextStyle(
-                                                color: Color(0xFF333333)),
+                                          title: const Text('Hints Available'),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              for (int i = 0;
+                                                  i <
+                                                      _selectedIcon!
+                                                          .hints.length;
+                                                  i++)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                  child: Text(
+                                                    'Hint ${i + 1}: ${_selectedIcon!.hints[i]}',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            Color(0xFF333333)),
+                                                  ),
+                                                ),
+                                            ],
                                           ),
                                           actions: [
                                             TextButton(
@@ -869,7 +927,7 @@ class MapIcon {
   final String answer;
   final Offset newPosition;
   final String? audioPath;
-  final String? hint;
+  final List<String> hints;
 
   MapIcon({
     required this.position,
@@ -881,6 +939,6 @@ class MapIcon {
     required this.answer,
     required this.newPosition,
     this.audioPath,
-    this.hint,
+    this.hints = const [],
   });
 }
