@@ -111,7 +111,7 @@ class _MazeGameState extends State<MazeGame> {
   static int _gamesCompleted = 0;
 
   static final List<List<List<int>>> _allMazes = [
-    // Maze 1 (5x5 - easiest)
+    // Maze 1 (5x5 -easiest)
     [
       [1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1],
