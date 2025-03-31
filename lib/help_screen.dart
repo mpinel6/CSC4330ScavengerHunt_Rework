@@ -12,6 +12,32 @@ class HelpScreen extends StatefulWidget {
 class _HelpScreenState extends State<HelpScreen> {
   final List<FAQItem> _faqs = [
     FAQItem(
+      question: 'How do I interact with the map?',
+      answer:
+          'You can zoom and pan on the interactive map using your fingers. Tap on icons to learn about specific locations.',
+    ),
+    FAQItem(
+      question:
+          'I answered all the questions on the first floor. What\'s next?',
+      answer:
+          'After completing all tasks on the first floor, the second-floor map icons will become available.',
+    ),
+    FAQItem(
+      question: 'How do I get hints for the questions?',
+      answer:
+          'Earn hints by successfully completing maze games in the Games tab. The number of available hints will be displayed in the article page on the lightbulb icon.',
+    ),
+    FAQItem(
+      question: 'How can I find a specific location?',
+      answer:
+          'Use the search bar in the Locations tab to filter results by room number, name, or description.',
+    ),
+    FAQItem(
+      question: 'What kind of information is available for each location?',
+      answer:
+          'Each location provides a detailed description, including its purpose, special features, and key facilities.',
+    ),
+    FAQItem(
       question: 'How do I start playing the Maze Game?',
       answer:
           'Go to the Games tab at the bottom navigation, pick any Location to play for, and memorize the maze within 5 seconds!',
@@ -24,7 +50,17 @@ class _HelpScreenState extends State<HelpScreen> {
     FAQItem(
       question: 'How do I get a hint after solving the maze?',
       answer:
-          'Once you reach the green square, you unlock a clue about the selected Location. Each time you succeed, the maze gets harder!',
+          'Once you reach the yellow square, you unlock a clue about the selected Location. Each time you succeed, the maze gets harder!',
+    ),
+    FAQItem(
+      question: 'The map icons aren\'t showing. What should I do?',
+      answer:
+          'Ensure you’ve completed previous tasks and answered questions correctly. Icons will appear sequentially.',
+    ),
+    FAQItem(
+      question: 'I didn\'t receive my clue after completing a maze.',
+      answer:
+          'Check the Map tab. If the hint wasn\'t applied, try restarting the app.',
     ),
   ];
 
@@ -32,7 +68,7 @@ class _HelpScreenState extends State<HelpScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const TutorialDialog(), 
+      builder: (context) => const TutorialDialog(),
     );
   }
 
@@ -95,13 +131,6 @@ class _HelpScreenState extends State<HelpScreen> {
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF461D7C),
-                  shadows: [
-                    Shadow(
-                      offset: Offset(1.0, 1.0),
-                      blurRadius: 3.0,
-                      color: Color(0xFF000000),
-                    ),
-                  ],
                 ),
               ),
               const SizedBox(height: 12),
