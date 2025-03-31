@@ -52,7 +52,7 @@ class _TutorialDialogState extends State<TutorialDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
+            SizedBox(
               height: 300,
               child: PageView.builder(
                 controller: _pageController,

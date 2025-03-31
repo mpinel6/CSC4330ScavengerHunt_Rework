@@ -23,9 +23,9 @@ class MapScreenState extends State<MapScreen>
   bool _isCorrect = false;
   bool _hasAnswered = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
-  bool _isPlaying = false;
-  bool _showVolumeSlider = false;
-  double _volume = 0.25;
+  final bool _isPlaying = false;
+  final bool _showVolumeSlider = false;
+  final double _volume = 0.25;
   final List<String> _answeredIcons = [];
 
   // Map of icons for each floor
@@ -292,11 +292,6 @@ class MapScreenState extends State<MapScreen>
   }
 
   final double _imageAspectRatio = 2647 / 2200;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   void _closeArticle() {
     setState(() {

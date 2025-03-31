@@ -27,7 +27,8 @@ class _LocationsScreenState extends State<LocationsScreen> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  final List<LocationInfo> allLocationData = [
+  // Make this static so it can be updated from anywhere
+  static final List<LocationInfo> allLocationData = [
     LocationInfo(
       floor: 'First Floor',
       hall: '1100s Hall',
@@ -39,9 +40,18 @@ class _LocationsScreenState extends State<LocationsScreen> {
     LocationInfo(
       floor: 'First Floor',
       hall: '1100s Hall',
-      title: 'Lab (1108)',
-      subtitle: 'Shared Teaching Lab',
-      description: 'Blank',
+      title: 'DOW Chemical Unit Operations Lab (1114)',
+      subtitle: 'Hands-On Chemical Engineering Laboratory',
+      description:
+          'The Dow Chemical Unit Operations Laboratory, part of the Cain'
+          'Department of Chemical Engineering, provides students with practical experience'
+          'using industry-grade equipment. The lab features unit operations, such as the Ethylene'
+          'Oxidation Reactor for converting ethylene to ethylene oxide, a compound commonly found'
+          'in detergents. A distillation column on the right side of the lab, best viewed from the'
+          'second floor, demonstrates the separation of water and glycols by vapor pressure'
+          'differences. With equipment donated or funded by industry partners, students engage in'
+          'hands-on learning as juniors and apply process control skills from the adjacent control'
+          'room as seniors.',
     ),
     LocationInfo(
       floor: 'First Floor',

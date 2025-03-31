@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'map_screen.dart';
-import 'locations_screen.dart';
 import 'help_screen.dart';
 import 'game_screen.dart';
 import 'tutorial_dialog.dart';
