@@ -41,17 +41,26 @@ class _LocationsScreenState extends State<LocationsScreen> {
       floor: 'First Floor',
       hall: '1100s Hall',
       title: 'DOW Chemical Unit Operations Lab (1114)',
-      subtitle: 'Hands-On Chemical Engineering Laboratory',
+      subtitle: 'Chemical Engineering Laboratory',
       description:
-          'The Dow Chemical Unit Operations Laboratory, part of the Cain'
-          'Department of Chemical Engineering, provides students with practical experience'
-          'using industry-grade equipment. The lab features unit operations, such as the Ethylene'
-          'Oxidation Reactor for converting ethylene to ethylene oxide, a compound commonly found'
-          'in detergents. A distillation column on the right side of the lab, best viewed from the'
-          'second floor, demonstrates the separation of water and glycols by vapor pressure'
-          'differences. With equipment donated or funded by industry partners, students engage in'
-          'hands-on learning as juniors and apply process control skills from the adjacent control'
-          'room as seniors.',
+          'The Dow Chemical Unit Operations Lab offers chemical engineering'
+          'students hands-on experience with industry-grade equipment. Key features'
+          'include an Ethylene Oxidation Reactor for producing ethylene oxide and a'
+          'distillation column for separating components by vapor pressure. Students'
+          'apply their knowledge in a practical setting, preparing for real-world engineering'
+          'challenges.',
+    ),
+    LocationInfo(
+      floor: 'First Floor',
+      hall: '1100s Hall',
+      title: 'BASF Sustainable Living Lab (1154)',
+      subtitle: 'Innovating for a Sustainable Future',
+      description:
+          'Funded by a \$1 million donation from BASF, this lab focuses on research for'
+          ' sustainable solutions. Researcher-in-residence Dr. Jimmy Lawrence develops polymers'
+          '  and nanoscale composites for healthcare, energy, and environmental applications. The'
+          ' lab’s flooring, paint, and ceiling are made from BASF products, demonstrating their'
+          ' commitment to sustainability.',
     ),
     LocationInfo(
       floor: 'First Floor',
@@ -59,28 +68,110 @@ class _LocationsScreenState extends State<LocationsScreen> {
       title: 'The Chevron Center (1269)',
       subtitle: 'Center for Engineering Education',
       description:
-          'The Chevron Center supports the Communication Across the Curriculum program, offering resources like 3D printers, large format printers, and rentable electronic devices for student projects. It features vending machines, a microwave, and a seating area, providing a collaborative space for engineering students.',
+          'The Chevron Center supports the Communication Across the Curriculum program,'
+          ' offering resources like 3D printers, large format printers, and rentable electronic'
+          ' devices for student projects. It features vending machines, a microwave, and a seating area,'
+          ' providing a collaborative space for engineering students.',
+    ),
+    LocationInfo(
+      floor: 'First Floor',
+      hall: '1200s Hall',
+      title: 'The Commons (1278)',
+      subtitle: 'Collaborative Space for Engineering Students',
+      description:
+          'The Commons serves as the central gathering space in Patrick F. Taylor Hall,'
+          ' popular among students for its Panera Bread and comfortable seating. Nearby is'
+          ' the Dow Student Leadership Incubator, providing meeting and storage space for over 40'
+          ' student organizations. This vibrant space fosters collaboration and community within the college.',
     ),
     LocationInfo(
       floor: 'First Floor',
       hall: '1300s Hall',
       title: 'Robotics Lab (1300)',
-      subtitle: '...',
-      description: '...',
+      subtitle: 'Home of Robotics',
+      description:
+          'Supporting the College of Engineering’s robotics minor, this lab features equipment'
+          ' like a hydraulic robotic arm, robotic vehicles including spiders and crawlers, and a mini'
+          ' humanoid robot named “Darwin.” Students gain hands-on experience in robotics design,'
+          ' programming, and control through practical projects and research.',
+    ),
+    LocationInfo(
+      floor: 'First Floor',
+      hall: '1300s Hall',
+      title: 'Civil Engineering Labs (1323)',
+      subtitle: 'Applied Civil Engineering Research',
+      description:
+          'This area contains most of the civil engineering student labs, where students conduct'
+          ' hands-on testing and research. Activities include testing concrete strength, creating and'
+          ' analyzing asphalt, examining soil composition, and evaluating the strength of metal and'
+          ' timber. These labs provide valuable practical experience in civil engineering applications.',
+    ),
+    LocationInfo(
+      floor: 'First Floor',
+      hall: '1300s Hall',
+      title: 'Mechanical Engineering Labs (1354)',
+      subtitle: 'Hands-On Engineering Learning',
+      description:
+          'This section houses student-focused labs for mechanical and industrial engineering,'
+          ' including human factors, thermal systems, materials, and instrumentation labs. Equipment such as'
+          ' a wind tunnel, tensile strength testers, and 3D-motion analysis systems support hands-on learning'
+          ' and research. Students gain practical experience applying engineering concepts in real-world scenarios.',
     ),
     LocationInfo(
       floor: 'Second Floor',
       hall: '2100s Hall',
-      title: 'HR Office (2101)',
-      subtitle: 'Human Resources Department',
-      description: 'Employee records and personnel management.',
+      title: 'Annex/Drilling Fluids Lab (2147)',
+      subtitle: 'Chemical Engineering Annex',
+      description:
+          'The Chemical Engineering Annex, built during the recent renovation and expansion,'
+          ' houses state-of-the-art laboratories. Spanning three floors, it includes labs for'
+          ' chemical, construction management, civil, environmental, and petroleum engineering.'
+          ' This space supports innovative research and hands-on learning.',
     ),
     LocationInfo(
-      floor: 'Third Floor',
-      hall: '3100s Hall',
-      title: 'Misc Office (3100)',
-      subtitle: 'Blank',
-      description: 'Blank',
+      floor: 'Second Floor',
+      hall: '2200s Hall',
+      title: 'Civil Engineering Driving Simulator Lab (2215)',
+      subtitle: 'Researching Driving Behaviors',
+      description:
+          'This lab allows students and faculty to study driving behaviors, environments,'
+          ' and traffic using advanced simulation technology. Equipped with multiple screens,'
+          ' projectors, and blackout curtains, it enables realistic driving scenarios to evaluate '
+          'driver reactions. Research topics include distracted driving, weather impacts, and'
+          ' interactions with semi-autonomous systems.',
+    ),
+    LocationInfo(
+      floor: 'Second Floor',
+      hall: '2200s Hall',
+      title: 'Brookshire Student Services Suite (2228)',
+      subtitle: 'Student Support and Advising',
+      description:
+          'The Student Services Suite is the primary resource for students needing academic'
+          ' or administrative assistance. It offers access to licensed academic advisors, career'
+          ' coaching, and support for major changes, minors, and credit transfers. The suite also'
+          ' houses recruiting and outreach staff, providing comprehensive support for student success.',
+    ),
+    LocationInfo(
+      floor: 'Second Floor',
+      hall: '2200s Hall',
+      title: 'Proto Lab (2272)',
+      subtitle: 'Microprocessor and Prototyping Labs',
+      description:
+          'This lab duplex features a microprocessor interfacing lab and a proto'
+          'lab for students to fabricate circuit boards and create device prototypes.'
+          'Equipped with fume hoods, soldering stations, cutting machines, and 3D printers,'
+          'it ensures safe handling of chemicals. UV-filtering lighting and windows protect'
+          'the delicate circuitry process.',
+    ),
+    LocationInfo(
+      floor: 'Second Floor',
+      hall: '2300s Hall',
+      title: 'BIM Lab (2348)',
+      subtitle: 'Virtual Reality Construction Management',
+      description:
+          'Designed for construction management students, this lab features 4K displays'
+          'for immersive, 3D views of building plans. It allows students and faculty to virtually'
+          'visit sites, assess designs, and address safety and maintenance concerns.',
     ),
   ];
 
