@@ -32,7 +32,7 @@ class _HelpScreenState extends State<HelpScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const TutorialDialog(), // from tutorial_dialog.dart
+      builder: (context) => const TutorialDialog(), 
     );
   }
 

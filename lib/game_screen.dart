@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'map_screen.dart'; 
+import 'map_screen.dart';
 
 class GamesScreen extends StatelessWidget {
   const GamesScreen({Key? key}) : super(key: key);
@@ -100,7 +100,6 @@ class GamesScreen extends StatelessWidget {
   }
 }
 
-/// The MazeGame widget – plays the memory game and returns true when completed successfully.
 class MazeGame extends StatefulWidget {
   const MazeGame({Key? key}) : super(key: key);
 
@@ -112,7 +111,7 @@ class _MazeGameState extends State<MazeGame> {
   static int _gamesCompleted = 0;
 
   static final List<List<List<int>>> _allMazes = [
-    // Maze 1 (5x5 - easiest)
+    // Maze 1 (5x5 -easiest)
     [
       [1, 1, 1, 1, 1],
       [1, 0, 0, 0, 1],
@@ -212,7 +211,7 @@ class _MazeGameState extends State<MazeGame> {
       [1, 0, 0, 1, 0, 0, 1, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1],
     ],
-    // Maze 11 (9x9)
+     // Maze 11 (9x9)
     [
       [1,1,1,1,1,1,1,1,1],
       [1,0,0,0,1,0,0,0,1],
@@ -504,8 +503,7 @@ class _MazeGameState extends State<MazeGame> {
   bool _hasReachedExit = false;
   int _timeElapsed = 0;
   int _memorizeCountdown = 5;
-  // _showMaze controls the color of path cells: white during memorization, black afterward.
-  bool _showMaze = true;
+  bool _showMaze = true; 
   bool _isMemorizing = true;
   Timer? _timer;
 
@@ -516,29 +514,62 @@ class _MazeGameState extends State<MazeGame> {
     _maze = _allMazes[difficultyIndex].map((row) => List<int>.from(row)).toList();
     _exitRow = _maze.length - 2;
     _exitCol = _maze[0].length - 2;
-
-    // Show a "Ready to start?" popup before beginning the memorize timer.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showReadyPopup();
     });
   }
 
   void _showReadyPopup() {
+    _timer?.cancel();
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Ready to start?'),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.white,
+          title: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF461D7C), // LSU Purple
+                  Color(0xFFFDD023), // LSU Gold
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Ready to start?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           content: const Text(
-              'Press "Start" when you are ready to begin memorizing the maze.'),
+            'Press "Start" when you are ready to begin memorizing the maze.',
+            style: TextStyle(fontSize: 16, color: Color(0xFF333333)),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
                 startMemorizationTimer();
               },
-              child: const Text('Start'),
+              child: const Text(
+                'Start',
+                style: TextStyle(
+                  color: Color(0xFF461D7C),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         );
@@ -596,28 +627,36 @@ class _MazeGameState extends State<MazeGame> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFFA39AAC),
-          title: const Text(
-            'You failed!',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF461D7C),
-              shadows: [
-                Shadow(
-                  offset: Offset(1.0, 1.0),
-                  blurRadius: 3.0,
-                  color: Color(0xFF000000),
-                ),
-              ],
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.white,
+          title: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF461D7C),
+                  Color(0xFFFDD023),
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'You failed!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
           content: const Text(
             'Try again!',
-            style: TextStyle(
-              fontSize: 16,
-              color: Color(0xFF333333),
-            ),
+            style: TextStyle(fontSize: 16, color: Color(0xFF333333)),
           ),
           actions: [
             TextButton(
@@ -628,7 +667,7 @@ class _MazeGameState extends State<MazeGame> {
               child: const Text(
                 'OK',
                 style: TextStyle(
-                  color: Color(0xFFFDD023),
+                  color: Color(0xFF461D7C),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -640,6 +679,7 @@ class _MazeGameState extends State<MazeGame> {
   }
 
   void _resetGame() {
+    _timer?.cancel();
     setState(() {
       _playerRow = 1;
       _playerCol = 1;
@@ -649,7 +689,6 @@ class _MazeGameState extends State<MazeGame> {
       _isMemorizing = true;
       _timeElapsed = 0;
     });
-    // Optionally, you can show the Ready popup again here if desired.
     _showReadyPopup();
   }
 
@@ -658,16 +697,49 @@ class _MazeGameState extends State<MazeGame> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Game Completed!'),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.white,
+          title: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF461D7C),
+                  Color(0xFFFDD023),
+                ],
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: const Text(
+              'Game Completed!',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           content: const Text(
             'You earned +1 hint.\nUse it in the Map screen!',
+            style: TextStyle(fontSize: 16, color: Color(0xFF333333)),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  color: Color(0xFF461D7C),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         );
@@ -788,7 +860,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_upward,
-                  color: Colors.black, // LSU Black color
+                  color: Colors.black,
                 ),
               ),
             ],
@@ -801,7 +873,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_left,
-                  color: Colors.black, // LSU Black color
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(width: 16),
@@ -810,7 +882,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_right,
-                  color: Colors.black, // LSU Black color
+                  color: Colors.black,
                 ),
               ),
             ],
@@ -823,7 +895,7 @@ class _MazeGameState extends State<MazeGame> {
                 style: _controlButtonStyle(),
                 child: const Icon(
                   Icons.arrow_downward,
-                  color: Colors.black, // LSU Black color
+                  color: Colors.black,
                 ),
               ),
             ],
