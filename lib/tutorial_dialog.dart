@@ -24,6 +24,18 @@ class _TutorialDialogState extends State<TutorialDialog> {
       icon: Icons.map,
     ),
     TutorialPage(
+      title: 'Interactive Map Controls',
+      description:
+          'When you tap on an icon, you will be able to see a description of the location and text input to answer.',
+      icon: Icons.location_on,
+    ),
+    TutorialPage(
+      title: 'Happy Hunting!',
+      description:
+          'Each article has a clue to help you find the next article. The lightbulb icon stores hints that you can use to help you access the next article.',
+      icon: Icons.psychology_rounded,
+    ),
+    TutorialPage(
       title: 'Location Guide',
       description:
           'Find detailed information about rooms, offices, and facilities. Search by room number or description.',

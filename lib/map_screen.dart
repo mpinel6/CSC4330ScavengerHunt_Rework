@@ -28,6 +28,10 @@ class MapScreenState extends State<MapScreen>
   final double _volume = 0.25;
   final List<String> _answeredIcons = [];
 
+  // Add these new state variables
+  bool _showLayersNotification = false;
+  bool _showSecondFloorNotification = false;
+
   // Map of icons for each floor
   final Map<String, List<MapIcon>> _floorIcons = {
     'First Floor': [
@@ -49,7 +53,7 @@ class MapScreenState extends State<MapScreen>
             '    As you explore, keep an eye on how power flows through the building — '
             'sometimes it\'s easy to overlook what\'s right beneath your feet.',
         imagePath: 'assets/images/capstonegallery.png',
-        answer: '14 outlets',
+        answers: ['14 outlets', '14'],
         newPosition: const Offset(0.5, 0.5),
         hints: [
           'Energy is all around, often hiding in plain sight. Some sources are closer than you think — maybe even lining your path.',
@@ -74,7 +78,7 @@ class MapScreenState extends State<MapScreen>
             'Hall possible.\n\n'
             '    The Donor Wall is a display of appreciation, but not all names are alike.',
         imagePath: 'assets/images/cambreatrium.png',
-        answer: '8 purple donors',
+        answers: ['8 purple donors', '8'],
         newPosition: const Offset(0.75, 0.75),
         hints: [
           'Colors often carry meaning.',
@@ -108,7 +112,7 @@ class MapScreenState extends State<MapScreen>
             'and then learn to run the equipment from the adjacent control room as seniors.\n\n'
             '    Before stepping into certain areas, it\'s wise to check for any precautions. The right clue will be staring you in the face — if you\'re paying attention.',
         imagePath: 'assets/images/dowchemical.png',
-        answer: 'Eye Protection',
+        answers: ['Eye Protection', 'Caution: Eye Protection'],
         newPosition: const Offset(0.75, 0.75),
         hints: [
           'Laboratories are places of discovery, but also of caution.',
@@ -131,7 +135,7 @@ class MapScreenState extends State<MapScreen>
             '    This challenge is about keeping your eyes open for details that others might miss.'
             'Don\'t rush; let your surroundings speak to you.',
         imagePath: 'assets/images/basflab.png',
-        answer: 'BASF Performance Flooring',
+        answers: ['BASF Performance Flooring'],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Not every message is loud.',
@@ -152,7 +156,7 @@ class MapScreenState extends State<MapScreen>
             'more than 40 student organizations that are part of our college.\n\n'
             '    The Commons isn\'t just a place to gather; it\'s where appetites meet satisfaction.',
         imagePath: 'assets/images/commons.png',
-        answer: 'Mac and Cheese',
+        answers: ['Mac and Cheese', 'Mac', 'Macaroni and Cheese'],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Look for the familiar comforts of a well-known spot, and you might just find your answer on the menu.',
@@ -172,9 +176,9 @@ class MapScreenState extends State<MapScreen>
             'will find equipment like a wind tunnel, tensile strength testers, and 3D-motion '
             'analysis systems.\n\n'
             '    In this challenge, numbers are your guide.'
-            'The key lies in understanding where these labs come together.',
+            ' The key lies in understanding where these labs come together.',
         imagePath: 'assets/images/mechlabs.png',
-        answer: '1300\'s Hall',
+        answers: ['1300\'s Hall', '1300'],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Mechanical and industrial engineering labs are scattered throughout, but they all share a common thread.',
@@ -194,7 +198,7 @@ class MapScreenState extends State<MapScreen>
             'study the strength of metal and timber.\n\n'
             '    Civil engineering is all about strength and precision, and so is this task.',
         imagePath: 'assets/images/civillabs.png',
-        answer: '10 Civil Engineering Labs',
+        answers: ['10 Civil Engineering Labs', '10'],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Keep your focus sharp and count carefully — the answer is laid out right in front of you.',
@@ -214,7 +218,7 @@ class MapScreenState extends State<MapScreen>
             'mini humanoid robot named "Darwin."\n\n'
             '    This challenge is all about machines and the minds behind them.',
         imagePath: 'assets/images/robotlab.png',
-        answer: 'Bengal Bots',
+        answers: ['Bengal Bots'],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Robots like spiders, crawlers, and humanoids are their specialty. Who commands these creations?',
@@ -240,7 +244,12 @@ class MapScreenState extends State<MapScreen>
             'each year, thanks in large part to this space and the professional staff who run it.\n\n'
             '    In the Chevron Center, innovation and creation are at your fingertips — for a price.',
         imagePath: 'assets/images/chevcenter.png',
-        answer: '0.15 per mL for 3D printing',
+        answers: [
+          '0.15 per mL for 3D printing',
+          '0.15',
+          '0.15 per ml',
+          '0.15 per'
+        ],
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'When working with 3D printers, materials are measured carefully.',
@@ -267,7 +276,7 @@ class MapScreenState extends State<MapScreen>
             'CATS equipment simulators, and an advanced materials lab.\n\n'
             '    The BIM Lab is where construction plans come to life, viewed in stunning detail.',
         imagePath: 'assets/images/bimlab.png',
-        answer: '44 screens',
+        answers: ['44 screens', '44'],
         newPosition: const Offset(0.5, 0.5),
         hints: [
           'The lab\'s 4K displays offer a larger-than-life view of projects.',
@@ -319,12 +328,21 @@ class MapScreenState extends State<MapScreen>
     if (_selectedIcon != null) {
       setState(() {
         final userAnswer = _answerController.text.toLowerCase().trim();
-        final correctAnswer = _selectedIcon!.answer.toLowerCase();
-        _isCorrect = userAnswer == correctAnswer;
+        _isCorrect = _selectedIcon!.answers
+            .map((a) => a.toLowerCase())
+            .contains(userAnswer);
 
         if (_isCorrect) {
           _hasAnswered = true;
           _answeredIcons.add(_selectedIcon!.title);
+
+          // Check if this was the last first floor article
+          if (_currentFloor == 'First Floor' &&
+              _floorIcons['First Floor']!
+                  .every((icon) => _answeredIcons.contains(icon.title))) {
+            _showLayersNotification = true;
+            _showSecondFloorNotification = true;
+          }
 
           final floorIcons = _floorIcons[_currentFloor];
           if (floorIcons != null) {
@@ -338,7 +356,7 @@ class MapScreenState extends State<MapScreen>
                 title: _selectedIcon!.title,
                 description: _selectedIcon!.description,
                 imagePath: _selectedIcon!.imagePath,
-                answer: _selectedIcon!.answer,
+                answers: _selectedIcon!.answers,
                 newPosition: _selectedIcon!.newPosition,
                 audioPath: _selectedIcon!.audioPath,
                 hints: _selectedIcon!.hints,
@@ -526,12 +544,32 @@ class MapScreenState extends State<MapScreen>
                       onPressed: () {
                         setState(() {
                           _showFloorButtons = !_showFloorButtons;
+                          // Clear notification when layers button is clicked
+                          _showLayersNotification = false;
                         });
                       },
                       backgroundColor: const Color(0xFF461D7C),
-                      child: const Icon(
-                        Icons.layers,
-                        color: Color(0xFFFDD023),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(
+                            Icons.layers,
+                            color: Color(0xFFFDD023),
+                          ),
+                          if (_showLayersNotification)
+                            Positioned(
+                              right: -19,
+                              top: -19,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   ),
@@ -811,46 +849,70 @@ class MapScreenState extends State<MapScreen>
 
   Widget _buildFloorButton(String floor, IconData icon) {
     final isSelected = _currentFloor == floor;
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
-      elevation: 4,
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _currentFloor = floor;
-            _transformationController.value = Matrix4.identity();
-          });
-        },
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          elevation: 4,
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                _currentFloor = floor;
+                _transformationController.value = Matrix4.identity();
+                // Clear notification when second floor is selected
+                if (floor == 'Second Floor') {
+                  _showSecondFloorNotification = false;
+                }
+              });
+            },
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: isSelected ? const Color(0xFF461D7C) : Colors.transparent,
-              width: 2,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                floor,
-                style: TextStyle(
-                  color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color:
+                      isSelected ? const Color(0xFF461D7C) : Colors.transparent,
+                  width: 2,
                 ),
               ),
-            ],
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    floor,
+                    style: TextStyle(
+                      color: isSelected ? const Color(0xFF461D7C) : Colors.grey,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-      ),
+        if (floor == 'Second Floor' && _showSecondFloorNotification)
+          Positioned(
+            right: -4,
+            top: -4,
+            child: Container(
+              width: 10,
+              height: 10,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -865,7 +927,7 @@ class MapIcon {
   final String title;
   final String description;
   final String imagePath;
-  final String answer;
+  final List<String> answers;
   final Offset newPosition;
   final String? audioPath;
   final List<String> hints;
@@ -877,7 +939,7 @@ class MapIcon {
     required this.title,
     required this.description,
     required this.imagePath,
-    required this.answer,
+    required this.answers,
     required this.newPosition,
     this.audioPath,
     this.hints = const [],
