@@ -8,7 +8,8 @@ class MapScreen extends StatefulWidget {
   MapScreenState createState() => MapScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class MapScreenState extends State<MapScreen>
+    with AutomaticKeepAliveClientMixin {
   // Global hints counter accessible from the game screen.
   static int availableHints = 0;
 
@@ -78,7 +79,7 @@ class MapScreenState extends State<MapScreen> {
         hints: [
           'Colors often carry meaning.',
           'Some names shine brighter than others, not just in generosity but in hue.',
-          'While yellow dominates, purple isn’t just a choice — it’s a distinction. Seek out those who stand apart.',
+          'While yellow dominates, purple isn\'t just a choice — it\'s a distinction. Seek out those who stand apart.',
         ],
       ),
       MapIcon(
@@ -111,7 +112,7 @@ class MapScreenState extends State<MapScreen> {
         newPosition: const Offset(0.75, 0.75),
         hints: [
           'Laboratories are places of discovery, but also of caution.',
-          'Warnings aren’t just words; they’re a visual reminder.',
+          'Warnings aren\'t just words; they\'re a visual reminder.',
           'Before you cross the threshold, consider what might protect the most sensitive part of yourself.',
         ],
       ),
@@ -128,7 +129,7 @@ class MapScreenState extends State<MapScreen> {
             'studies and develops new functional polymers and nanoscale composites for healthcare, '
             'energy, environmental, and other industrial applications.\n\n'
             '    This challenge is about keeping your eyes open for details that others might miss.'
-            'Don’t rush; let your surroundings speak to you.',
+            'Don\'t rush; let your surroundings speak to you.',
         imagePath: 'assets/images/basflab.png',
         answer: 'BASF Performance Flooring',
         newPosition: const Offset(0.55, 0.75),
@@ -149,13 +150,13 @@ class MapScreenState extends State<MapScreen> {
             'classes, not only because of the Panera Bread, but also because of the nearby Dow '
             'Student Leadership Incubator, which serves as a meeting and storage space for the '
             'more than 40 student organizations that are part of our college.\n\n'
-            '    The Commons isn’t just a place to gather; it’s where appetites meet satisfaction.',
+            '    The Commons isn\'t just a place to gather; it\'s where appetites meet satisfaction.',
         imagePath: 'assets/images/commons.png',
         answer: 'Mac and Cheese',
         newPosition: const Offset(0.55, 0.75),
         hints: [
           'Look for the familiar comforts of a well-known spot, and you might just find your answer on the menu.',
-          'Creamy, cheesy, and iconic — it’s often hard to resist.',
+          'Creamy, cheesy, and iconic — it\'s often hard to resist.',
           'Pasta',
         ],
       ),
@@ -244,7 +245,7 @@ class MapScreenState extends State<MapScreen> {
         hints: [
           'When working with 3D printers, materials are measured carefully.',
           'The key to this question lies in understanding just how much a small amount can cost.',
-          'The cost isn’t calculated per project or per hour. It’s all about volume.',
+          'The cost isn\'t calculated per project or per hour. It\'s all about volume.',
         ],
       ),
     ],
@@ -269,8 +270,8 @@ class MapScreenState extends State<MapScreen> {
         answer: '44 screens',
         newPosition: const Offset(0.5, 0.5),
         hints: [
-          'The lab’s 4K displays offer a larger-than-life view of projects.',
-          'This isn’t just one screen — it’s a full-scale experience. Think about how many it would take to simulate an entire site.',
+          'The lab\'s 4K displays offer a larger-than-life view of projects.',
+          'This isn\'t just one screen — it\'s a full-scale experience. Think about how many it would take to simulate an entire site.',
           'How many screens make this immersive experience possible? The answer is there — if you can count it.',
         ],
       ),
@@ -304,6 +305,10 @@ class MapScreenState extends State<MapScreen> {
       _answerController.clear();
       _isCorrect = false;
       _hasAnswered = false;
+      // Decrement available hints when moving to a new article
+      if (MapScreenState.availableHints > 0) {
+        MapScreenState.availableHints--;
+      }
     });
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
@@ -357,6 +362,7 @@ class MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
@@ -421,35 +427,37 @@ class MapScreenState extends State<MapScreen> {
                                     ?.asMap()
                                     .entries
                                     .where((entry) {
-                              if (entry.key == 0) return true;
-                              final previousIcon = _floorIcons[_currentFloor]![entry.key - 1];
-                              return _answeredIcons.contains(previousIcon.title);
-                            }).map((entry) => Positioned(
-                                  left: width * entry.value.position.dx,
-                                  top: height * entry.value.position.dy,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedIcon = entry.value;
-                                      });
-                                    },
-                                    child: Tooltip(
-                                      message: entry.value.title,
-                                      child: Icon(
-                                        entry.value.icon,
-                                        color: entry.value.color,
-                                        size: 26,
-                                        shadows: const [
-                                          Shadow(
-                                            offset: Offset(1.0, 1.0),
-                                            blurRadius: 2.0,
-                                            color: Color(0xFF000000),
+                                  if (entry.key == 0) return true;
+                                  final previousIcon = _floorIcons[
+                                      _currentFloor]![entry.key - 1];
+                                  return _answeredIcons
+                                      .contains(previousIcon.title);
+                                }).map((entry) => Positioned(
+                                          left: width * entry.value.position.dx,
+                                          top: height * entry.value.position.dy,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _selectedIcon = entry.value;
+                                              });
+                                            },
+                                            child: Tooltip(
+                                              message: entry.value.title,
+                                              child: Icon(
+                                                entry.value.icon,
+                                                color: entry.value.color,
+                                                size: 26,
+                                                shadows: const [
+                                                  Shadow(
+                                                    offset: Offset(1.0, 1.0),
+                                                    blurRadius: 2.0,
+                                                    color: Color(0xFF000000),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )) ??
+                                        )) ??
                                 [],
                           ],
                         );
@@ -478,7 +486,8 @@ class MapScreenState extends State<MapScreen> {
               left: 16,
               bottom: 80,
               child: TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: _selectedIcon != null ? 1.0 : 0.0),
+                tween:
+                    Tween(begin: 0.0, end: _selectedIcon != null ? 1.0 : 0.0),
                 duration: const Duration(milliseconds: 300),
                 builder: (context, value, child) {
                   return Transform.translate(
@@ -695,7 +704,8 @@ class MapScreenState extends State<MapScreen> {
                                           minHeight: 18,
                                         ),
                                         child: Text(
-                                          MapScreenState.availableHints.toString(),
+                                          MapScreenState.availableHints
+                                              .toString(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 10,
@@ -708,22 +718,23 @@ class MapScreenState extends State<MapScreen> {
                               ),
                               onPressed: MapScreenState.availableHints > 0
                                   ? () {
-                                      setState(() {
-                                        MapScreenState.availableHints--;
-                                      });
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: const Text('Hints Available'),
+                                          title: const Text('Available Hints'),
                                           content: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              // Show all hints up to the number of available hints
                                               for (int i = 0;
                                                   i <
-                                                      _selectedIcon!
-                                                          .hints.length;
+                                                          _selectedIcon!
+                                                              .hints.length &&
+                                                      i <
+                                                          MapScreenState
+                                                              .availableHints;
                                                   i++)
                                                 Padding(
                                                   padding:
@@ -752,7 +763,8 @@ class MapScreenState extends State<MapScreen> {
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          title: const Text('No Hints Available'),
+                                          title:
+                                              const Text('No Hints Available'),
                                           content: const Text(
                                             'You need to win games in the Games section to earn hints!',
                                             style: TextStyle(
@@ -846,6 +858,9 @@ class MapScreenState extends State<MapScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class MapIcon {

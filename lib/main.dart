@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _hasSeenTutorial = false;
 
-  static const List<Widget> _screens = [
+  final List<Widget> _screens = const [
     MapScreen(),
     LocationsScreen(),
     GamesScreen(),
@@ -79,7 +79,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFA39AAC),
-      body: _screens[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
