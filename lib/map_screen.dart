@@ -27,6 +27,7 @@ class MapScreenState extends State<MapScreen>
   final bool _showVolumeSlider = false;
   final double _volume = 0.25;
   final List<String> _answeredIcons = [];
+  final Map<String, int> _usedHints = {};
 
   // Add these new state variables
   bool _showLayersNotification = false;
@@ -750,69 +751,47 @@ class MapScreenState extends State<MapScreen>
                                 ],
                               ),
                               onPressed: MapScreenState.availableHints > 0
-                                  ? () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text('Available Hints'),
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              // Show all hints up to the number of available hints
-                                              for (int i = 0;
-                                                  i <
-                                                          _selectedIcon!
-                                                              .hints.length &&
-                                                      i <
-                                                          MapScreenState
-                                                              .availableHints;
-                                                  i++)
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 8.0),
-                                                  child: Text(
-                                                    'Hint ${i + 1}: ${_selectedIcon!.hints[i]}',
-                                                    style: const TextStyle(
-                                                        color:
-                                                            Color(0xFF333333)),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text('Close'),
-                                            ),
-                                          ],
+                            ? () {
+                                final title = _selectedIcon!.title;
+                                final used = _usedHints[title] ?? 0;
+
+                                if (used < _selectedIcon!.hints.length) {
+                                  setState(() {
+                                    _usedHints[title] = used + 1;
+                                    MapScreenState.availableHints--;
+                                  });
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Hint ${used + 1}'),
+                                      content: Text(_selectedIcon!.hints[used]),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: const Text('Close'),
                                         ),
-                                      );
-                                    }
-                                  : () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title:
-                                              const Text('No Hints Available'),
-                                          content: const Text(
-                                            'You need to win games in the Games section to earn hints!',
-                                            style: TextStyle(
-                                                color: Color(0xFF333333)),
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
-                                              child: const Text('Close'),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                      ],
+                                    ),
+                                  );
+                                }
+                              }
+                            : () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('No Hints Available'),
+                                    content: const Text(
+                                        'You need to win games in the Games section to earn hints!'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
